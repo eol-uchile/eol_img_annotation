@@ -1,0 +1,38 @@
+<div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
+    <ul class="list-input settings-list">
+      <li class="field comp-setting-entry is-set">
+        <div class="wrapper-comp-setting">
+          <label class="label setting-label" for="display_name">Display name</label>
+          <input class="input setting-input" name="display_name" id="display_name" value="{{xblock.display_name}}" type="text" />
+        </div>
+      </li>
+      <li class="field comp-setting-entry is-set">
+        <div class="wrapper-comp-setting">
+          <label class="label setting-label" for="image_url">Url imagen (formato DZI)</label>
+          <input class="input setting-input" name="image_url" id="image_url" value="{{xblock.image_url}}" type="text" />
+        </div>
+      </li>
+      <li class="field comp-setting-entry is-set">
+        <div class="wrapper-comp-setting">
+          <label class="label setting-label" for="header_text">Encabezado</label>
+          <textarea class="input setting-input" name="header_text" id="header_text" type="text" rows="10" cols="70" placeholder='Inserte encabezado del componente'>{{ xblock.header_text }}</textarea>
+        </div>
+      </li>
+      <li class="field comp-setting-entry is-set">
+        <div class="wrapper-comp-setting">
+          <label class="label setting-label" for="puntajemax">Puntaje Máximo</label>
+          <input class="input setting-input" name="puntajemax" id="puntajemax" value="{{xblock.puntajemax}}" type="number" />
+        </div>
+      </li>
+    </ul>
+    <div class="xblock-actions">
+      <ul>
+        <li class="action-item">
+          <a href="#" class="button action-primary save-button save-button-img_annotation">Guardar</a>
+        </li>
+        <li class="action-item">
+          <a href="#" class="button cancel-button cancel-button-img_annotation">Cancelar</a>
+        </li>        
+      </ul>
+    </div>
+</div>

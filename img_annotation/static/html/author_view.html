@@ -1,0 +1,26 @@
+<div class="img_annotation_block">
+    <p style="text-align: justify;">{{ xblock.header_text }}</p>
+    {% if xblock.image_url == "" %}
+        <div class="alert alert-warning">
+            <p>El componente <strong>no se ha configurado correctamente</strong>.</p>
+            <p>Edita nuevamente, y revisa que todos los campos se han rellenado.</p>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p>Puede agregar anotaciones acá como anotaciones de ayuda que podrán ver todos los estudiantes.</p>
+        </div>
+        <div class="wrapper-comp-setting" style="padding-top: 10px;padding-bottom: 10px;">
+            <label class="label setting-label" for="annotations_xblock" style="font-size: inherit;">Anotaciones de Ayuda: </label>
+            <select id="annotations_xblock" name="annotations_xblock">
+                <option value="0" selected>Seleccione una Anotación</option>
+                {% for x in annotation_author %}
+                <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <label style="cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_label"></label>
+        <div id="toolbar"></div>
+        <div id="openseadragon"></div>
+    {% endif %}
+</div>    
+
