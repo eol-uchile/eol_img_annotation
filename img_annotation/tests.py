@@ -138,7 +138,7 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
 
     def test_edit_block_studio_error(self):
         """
-            Verify submit studio edits is working
+            Verify submit studio edits when fail
         """
         request = TestRequest()
         request.method = 'POST'
@@ -154,6 +154,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(data_response['result'], 'error')
 
     def test_author_create_annotation(self):
+        """
+            Test create annotations in author view
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -171,6 +174,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(expected[0]['body'], self.annotation['body'])
 
     def test_author_create_annotation_error(self):
+        """
+            Test create annotations in author view when no exists data in post
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -184,11 +190,14 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(len(expected), 0)
     
     def test_author_create_annotation_error_user(self):
+        """
+            Test create annotations in author view, when user dont have permission
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.student.id
         self.xblock.xmodule_runtime.user_is_staff = False
-        data = json.dumps({'annotation': {}})
+        data = json.dumps({'annotation': self.annotation})
         request.body = data.encode()
         response = self.xblock.save_anno_xblock(request)
         data_response = json.loads(response._app_iter[0].decode())
@@ -197,6 +206,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(len(expected), 0)
 
     def test_update_annotation(self):
+        """
+            Test update annotations
+        """
         anno = ImgAnnotationModel.objects.create(
             annotation_id = "#123-456-789",
             user = self.staff_user,
@@ -223,6 +235,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(expected[0]['body'], self.annotation['body'])
 
     def test_update_annotation_staff(self):
+        """
+            Test update annotations, when user is staff
+        """
         anno = ImgAnnotationModel.objects.create(
             annotation_id = "#123-456-789",
             user = self.student,
@@ -251,6 +266,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(expected[0]['body'], self.annotation['body'])
 
     def test_update_annotation_staff_error(self):
+        """
+            Test update annotations, when user is staff, when no exists data in post
+        """
         anno = ImgAnnotationModel.objects.create(
             annotation_id = "#123-456-789",
             user = self.student,
@@ -276,6 +294,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(expected[0]['body'], [])
 
     def test_update_annotation_error(self):
+        """
+            Test update annotations when no exists data in post
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -289,6 +310,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(len(expected), 0)
 
     def test_delete_annotation(self):
+        """
+            Test delete annotations
+        """
         anno = ImgAnnotationModel.objects.create(
             annotation_id = self.annotation['id'],
             user = self.staff_user,
@@ -314,6 +338,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(len(expected), 0)
 
     def test_delete_annotation_error(self):
+        """
+            Test delete annotations, id annotation no exists in post data
+        """
         anno = ImgAnnotationModel.objects.create(
             annotation_id = '#789-456',
             user = self.staff_user,
@@ -339,6 +366,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(len(expected), 1)
 
     def test_delete_annotation_error_2(self):
+        """
+            Test delete annotations, when annotation no exists 
+        """
         anno = ImgAnnotationModel.objects.create(
             annotation_id = '#789-456',
             user = self.staff_user,
@@ -365,7 +395,7 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
 
     def test_student_view_staff(self):
         """
-            Verify context in student_view staff user
+            Verify context and settings in student_view staff user
         """
         expected_context = {
             'list_annotation_student': [],
@@ -392,7 +422,7 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
 
     def test_student_view_student(self):
         """
-            Verify context in student_view student user
+            Verify context and settings in student_view student user
         """
         expected_context = {
             'list_annotation_student': [],
@@ -419,6 +449,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
             self.assertEqual(expected_settings[key], settings[key])
 
     def test_student_create_annotation(self):
+        """
+            Test create annotation, student user
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.student.id
@@ -436,6 +469,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(expected[0]['body'], self.annotation['body'])
 
     def test_student_create_annotation_error(self):
+        """
+            Test create annotation, student user, when annotation data mp exists in post data
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.student.id
@@ -449,6 +485,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(len(expected), 0)
 
     def test_student_create_annotation_error_2(self):
+        """
+            Test create annotation, anonymous user
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = None
@@ -462,6 +501,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(len(expected), 0)
 
     def test_get_student_data(self):
+        """
+            Verify the student data of get_student_data()
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -486,6 +528,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
     
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_get_student_data_with_score(self, _):
+        """
+            Verify the student data of get_student_data(), when user have score
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -516,6 +561,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(data_response['lista_alumnos'], expected)
 
     def test_get_student_data_error(self):
+        """
+            Verify the student data of get_student_data(), when user dont have permission
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.student.id
@@ -528,6 +576,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
 
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_save_data_student(self, _):
+        """
+            test save user score and comment
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -545,6 +596,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
 
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_save_data_student_min_score(self, _):
+        """
+            test save user score and comment, when score is minimum
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -562,6 +616,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
 
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_save_data_student_error_score(self, _):
+        """
+            test save user score and comment, when score is float
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -574,6 +631,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
     
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_save_data_student_error_score_2(self, _):
+        """
+            test save user score and comment, when score is not a number
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -586,6 +646,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
     
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_save_data_student_error_max_score(self, _):
+        """
+            test save user score and comment, when score is maximum
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -598,6 +661,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
 
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_save_data_student_error_min_score(self, _):
+        """
+            test save user score and comment, when score is less than the minimum
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -610,6 +676,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
 
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_save_data_student_error_user_role(self, _):
+        """
+            test save user score and comment, when user dont have permission
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.student.id
@@ -621,6 +690,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(data_response['result'], 'error')
     
     def test_get_student_annotation(self):
+        """
+            Test get student annotations, score and comment
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -634,6 +706,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
     
     @patch('lms.djangoapps.grades.signals.handlers.PROBLEM_WEIGHTED_SCORE_CHANGED.send')
     def test_get_student_annotation_with_data(self, _):
+        """
+            Test get student annotations, score and comment, when already have data
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
@@ -653,6 +728,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(data_response, expected)
 
     def test_get_student_annotation_wrong_user_role(self):
+        """
+            Test get student annotations, score and comment, when user dont have permission
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.student.id
@@ -665,6 +743,9 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(data_response, expected)
     
     def test_get_student_annotation_wrong_id(self):
+        """
+            Test get student annotations, score and comment, when id student is None
+        """
         request = TestRequest()
         request.method = 'POST'
         self.xblock.scope_ids.user_id = self.staff_user.id
