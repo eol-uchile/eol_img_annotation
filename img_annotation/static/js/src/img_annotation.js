@@ -93,10 +93,12 @@ function ImgAnnotationXBlock(runtime, element, settings) {
             if (highlightBody)
               return highlightBody.value;
           }
+          osd = 'openseadragon-'+settings.location;
           var viewer = OpenSeadragon({
-              id: "openseadragon",
+              id: osd,
               prefixUrl: settings.osd_resources,
-              tileSources: settings.image_url
+              tileSources: settings.image_url,
+              showNavigator:  true
           });
           anno = OpenSeadragon.Annotorious(viewer, {
             locale: 'auto',
@@ -113,8 +115,8 @@ function ImgAnnotationXBlock(runtime, element, settings) {
               id: settings.username+'.',
               displayName: settings.username+'.'
             });
-            $(element).find('#puntaje')[0].disabled = true;
-            $(element).find('#comentario')[0].disabled = true;
+            $(element).find('input[name=puntaje]')[0].disabled = true;
+            $(element).find('textarea[name=comentario]')[0].disabled = true;
             $(element).find('input[name=img-annotation-save]')[0].disabled = true;
             $(element).find('input[name=img-annotation-save]').hide();
             anno.readOnly = true;
@@ -175,8 +177,8 @@ function ImgAnnotationXBlock(runtime, element, settings) {
                   let child = document.createElement("option");
                   child.id = annotation.id.substring(1);
                   child.value = annotation.id;
-                  child.innerText = 'Anotación ' + $(element).find('#annotations_student')[0].children.length;
-                  $(element).find('#annotations_student')[0].appendChild(child);
+                  child.innerText = 'Anotación ' + $(element).find('select[name=annotations_student]')[0].children.length;
+                  $(element).find('select[name=annotations_student]')[0].appendChild(child);
                 });
               });
               anno.on('deleteAnnotation', function(annotation) {
@@ -186,7 +188,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
                     $element.find('#img_annotation_wrong_main')[0].textContent = "Error en borrar, actualice la página e intente nuevamente.";
                     $(element).find('#img_annotation_wrong_main').show();
                   }
-                  var select = $(element).find('#annotations_student');
+                  var select = $(element).find('select[name=annotations_student]');
                   select[0].removeChild(select.find(annotation.id)[0]);
                 });
               });
@@ -245,23 +247,23 @@ function ImgAnnotationXBlock(runtime, element, settings) {
           "id": id
         }
       }
-      $(element).find('#annotations_student')[0].addEventListener('change', function() {
+      $(element).find('select[name=annotations_student]')[0].addEventListener('change', function() {
         $('.r6o-icon.r6o-arrow-down').show();
         setTimeout(removeEditDropdown, 40);
         onAnnotation = this.value;
         anno.readOnly = false;
-        $(element).find('#annotations_author')[0].value = "0";
+        $(element).find('select[name=annotations_author]')[0].value = "0";
         if(this.value != "0"){
           anno.selectAnnotation(this.value);
           anno.panTo(this.value, true);
         }
       });
-      $(element).find('#annotations_author')[0].addEventListener('change', function() {
+      $(element).find('select[name=annotations_author]')[0].addEventListener('change', function() {
         $('.r6o-icon.r6o-arrow-down').show();
         setTimeout(removeEditDropdown, 40);
         onAnnotation = this.value;
         anno.readOnly = true;
-        $(element).find('#annotations_student')[0].value = "0";
+        $(element).find('select[name=annotations_student]')[0].value = "0";
         if(this.value != "0"){
           anno.selectAnnotation(this.value);
           anno.panTo(this.value, true);
@@ -319,7 +321,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         return tr+id_student+username+score+boton+'</tr>'
       }
       function changeSelectAnnotation(annotations){
-        var select_content = $(element).find('#annotations_student');
+        var select_content = $(element).find('select[name=annotations_student]');
         var html_content = '<option value="0" selected>Seleccione una Anotación</option>';
         for (var i = 0; i < annotations.length; i++) {
             html_content = html_content + create_select_student(annotations[i], i+1);
@@ -333,7 +335,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         var value = datos['id'];
         return option+id_anno+'" value="'+value+'">Anotación '+i+'</option>'
       }
-      $(element).find('#checkbox_users').live('change', function(e) {
+      $(element).find('input[name=checkbox_users]').live('change', function(e) {
         if (e.target.checked) {
             $(element).find('.class_scored_user').hide()
         }
@@ -341,7 +343,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
             $(element).find('.class_scored_user').show()
         }
       });
-      $(element).find('#checkbox_annotation').live('change', function(e) {
+      $(element).find('input[name=checkbox_annotation]').live('change', function(e) {
         if (e.target.checked) {
           settings.annotation_staff.forEach(annotation => {
             anno.addAnnotation(setAnnotation(annotation.id, annotation.body, annotation.target));
@@ -356,7 +358,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         }
       });
       $(element).find('tr input[type=button]').live('click', function(e) {
-        $(element).find('#checkbox_annotation')[0].checked = false;
+        $(element).find('input[name=checkbox_annotation]')[0].checked = false;
         $(element).find('#annotations_student_class').hide();
         $(element).find('#annotations_author_class').hide();
         $(element).find('#header_username').hide();
@@ -381,14 +383,14 @@ function ImgAnnotationXBlock(runtime, element, settings) {
             response.annotation.forEach(annotation => {
               anno.addAnnotation(setAnnotation(annotation.id, annotation.body, annotation.target));
             });
-            $(element).find('#puntaje')[0].disabled = false;
-            $(element).find('#comentario')[0].disabled = false;
+            $(element).find('input[name=puntaje]')[0].disabled = false;
+            $(element).find('textarea[name=comentario]')[0].disabled = false;
             $(element).find('input[name=img-annotation-save]')[0].disabled = false;
             $(element).find('input[name=img-annotation-save]')[0].setAttribute("aria-controls", id_student);
             $(element).find('input[name=img-annotation-random]')[0].setAttribute("aria-controls", id_student);
             $(element).find('input[name=img-annotation-save]').show();
-            $(element).find('#puntaje')[0].value = response.score;
-            $(element).find('#comentario')[0].value = response.comment;
+            $(element).find('input[name=puntaje]')[0].value = response.score;
+            $(element).find('textarea[name=comentario]')[0].value = response.comment;
             var modal = '#grade-1-img-annotation-'+ settings.location;
             $(modal).hide();
           }).fail(function() {
@@ -442,8 +444,8 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         $(element).find('#img_annotation_footer').hide();
         $(element).find('#img_annotation_wrong_footer').hide();
         var student_id = e.target.getAttribute('aria-controls');
-        var puntaje = $(element).find('#puntaje')[0].value;
-        var comentario = $(element).find('#comentario')[0].value;
+        var puntaje = $(element).find('input[name=puntaje]')[0].value;
+        var comentario = $(element).find('textarea[name=comentario]')[0].value;
         var pmax = settings.puntajemax;
         if(puntaje != "" && !(puntaje.includes(".")) && parseInt(puntaje, 10) <= parseInt(pmax, 10) && parseInt(puntaje, 10) >= 0){
             $.post(handlerUrlSaveStudentAnswers, JSON.stringify({"student_id": student_id, "puntaje": puntaje, "comentario": comentario})).done(function(response) {
@@ -471,7 +473,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
             });
         }
         else{
-            $element.find('#img_annotation_wrong_footer')[0].textContent = "Revise los campos si estan correctos.";
+            $element.find('#img_annotation_wrong_footer')[0].textContent = "Puntaje incorrecto, el puntaje debe ser un número entero entre 0 y " + pmax + '.';
             $element.find('#img_annotation_footer')[0].textContent = "";
             $(element).find('#img_annotation_footer').hide();
             $(element).find('#img_annotation_wrong_footer').show();
@@ -484,9 +486,9 @@ function ImgAnnotationXBlock(runtime, element, settings) {
       }
       $(element).find('input[name=img-annotation-random]').live('click', function(e) {
         e.target.disabled = true;
-        $(element).find('#checkbox_annotation')[0].checked = false;
-        $(element).find('#puntaje')[0].disabled = true;
-        $(element).find('#comentario')[0].disabled = true;
+        $(element).find('input[name=checkbox_annotation]')[0].checked = false;
+        $(element).find('input[name=puntaje]')[0].disabled = true;
+        $(element).find('textarea[name=comentario]')[0].disabled = true;
         $(element).find('#annotations_student_class').hide();
         $(element).find('#annotations_author_class').hide();
         $(element).find('#header_username').hide();
@@ -520,14 +522,14 @@ function ImgAnnotationXBlock(runtime, element, settings) {
               anno.addAnnotation(setAnnotation(annotation.id, annotation.body, annotation.target));
             });
             e.target.disabled = false;
-            $(element).find('#puntaje')[0].disabled = false;
-            $(element).find('#comentario')[0].disabled = false;
+            $(element).find('input[name=puntaje]')[0].disabled = false;
+            $(element).find('textarea[name=comentario]')[0].disabled = false;
             $(element).find('input[name=img-annotation-save]')[0].disabled = false;
             $(element).find('input[name=img-annotation-save]')[0].setAttribute("aria-controls", id_student);
             $(element).find('input[name=img-annotation-random]')[0].setAttribute("aria-controls", id_student);
             $(element).find('input[name=img-annotation-save]').show();
-            $(element).find('#puntaje')[0].value = response.score;
-            $(element).find('#comentario')[0].value = response.comment;
+            $(element).find('input[name=puntaje]')[0].value = response.score;
+            $(element).find('textarea[name=comentario]')[0].value = response.comment;
             $(element).find('#ui-loading-img-annotation-random').hide();
           }).fail(function() {
               $element.find('#img_annotation_wrong_footer')[0].textContent = "Actualice la página e intente nuevamente.";

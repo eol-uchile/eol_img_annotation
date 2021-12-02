@@ -54,8 +54,8 @@
                                 </div>
                                 <div class="col-md-4"></div>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name='checkbox_users' id='checkbox_users' value="1">
-                                    <label for="checkbox_users">Mostrar solo usuarios sin evaluar</label>
+                                    <input type="checkbox" name='checkbox_users' id='checkbox_users-{{ location }}' value="1">
+                                    <label for="checkbox_users-{{ location }}">Mostrar solo usuarios sin evaluar</label>
                                 </div>
                             </div>
                         </div>
@@ -64,8 +64,8 @@
             </div>
             <p style="text-align: justify;">{{ xblock.header_text }}</p>
             <div class="wrapper-comp-setting" id="annotations_author_class" style="padding-top: 5px;padding-bottom: 5px;">
-                <label class="label setting-label" for="annotations_author">Anotaciones de Ayuda: </label>
-                <select id="annotations_author" name="annotations_author">
+                <label class="label setting-label" for="annotations_author-{{ location }}">Anotaciones de Ayuda: </label>
+                <select id="annotations_author-{{ location }}" name="annotations_author">
                     <option value="0" selected>Seleccione una Anotación</option>
                     {% for x in list_annotation_staff %}
                     <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
@@ -73,8 +73,8 @@
                 </select>
             </div>
             <div class="wrapper-comp-setting" id="annotations_student_class" style="display: none;padding-top: 5px;padding-bottom: 5px;">
-                <label class="label setting-label" for="annotations_student">Anotaciones: </label>
-                <select id="annotations_student" name="annotations_student" >
+                <label class="label setting-label" for="annotations_student-{{ location }}">Anotaciones: </label>
+                <select id="annotations_student-{{ location }}" name="annotations_student" >
                     <option value="0" selected>Seleccione una Anotación</option>
                     {% for x in list_annotation_student %}
                     <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
@@ -84,8 +84,8 @@
         {% else %}
             <p style="text-align: justify;">{{ xblock.header_text }}</p>
             <div class="wrapper-comp-setting" id="annotations_author_class" style="padding-top: 5px;padding-bottom: 5px;">
-                <label class="label setting-label" for="annotations_author">Anotaciones de Ayuda: </label>
-                <select id="annotations_author" name="annotations_author">
+                <label class="label setting-label" for="annotations_author-{{ location }}">Anotaciones de Ayuda: </label>
+                <select id="annotations_author-{{ location }}" name="annotations_author">
                     <option value="0" selected>Seleccione una Anotación</option>
                     {% for x in list_annotation_staff %}
                     <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
@@ -93,8 +93,8 @@
                 </select>
             </div>
             <div class="wrapper-comp-setting" id="annotations_student_class" style="padding-top: 5px;padding-bottom: 5px;">
-                <label class="label setting-label" for="annotations_student">Mis Anotaciones: </label>
-                <select id="annotations_student" name="annotations_student" >
+                <label class="label setting-label" for="annotations_student-{{ location }}">Mis Anotaciones: </label>
+                <select id="annotations_student-{{ location }}" name="annotations_student" >
                     <option value="0" selected>Seleccione una Anotación</option>
                     {% for x in list_annotation_student %}
                     <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
@@ -105,10 +105,10 @@
     <label style="cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_main"></label>
     <div id="toolbar" style="display: inline-block;"></div>
     <div class="wrapper-comp-setting" style="float: right;margin-top: 15px;">
-        <input type="checkbox" name='checkbox_annotation' id='checkbox_annotation' value="1" checked>
-        <label for="checkbox_annotation">Mostrar anotaciones de ayuda</label>
+        <input type="checkbox" name='checkbox_annotation' id='checkbox_annotation-{{ location }}' value="1" checked>
+        <label for="checkbox_annotation-{{ location }}">Mostrar anotaciones de ayuda</label>
     </div>
-    <div id="openseadragon" style="display: flex;"></div>
+    <div id="openseadragon-{{ location }}" class='openseadragon' style="display: flex;"></div>
     {% if is_course_staff %}
         <div class="wrap-instructor-info" style="display: block;">
             <h3>Informacion Calificados</h3>
@@ -126,12 +126,12 @@
             <div id="calificacion_student" style="display: none;">
                 <h3>Calificacion para: <spin id="student_username"></spin></h3>
                 <div class="wrapper-comp-setting" style="padding: 10px;">
-                    <label class="label setting-label" for="puntaje">Puntaje: </label>
-                    <input class="input setting-input" name="puntaje" id="puntaje" value="" type="number" min="0" max="{{ xblock.puntajemax }}"/>
+                    <label class="label setting-label" for="puntaje-{{ location }}">Puntaje: </label>
+                    <input class="input setting-input" name="puntaje" id="puntaje-{{ location }}" value="" type="number" min="0" max="{{ xblock.puntajemax }}"/>
                 </div>
                 <div class="wrapper-comp-setting" style="padding: 10px;">
-                    <label class="label setting-label" for="comentario">Comentario General: </label>
-                    <textarea class="input setting-input" name="comentario" id="comentario" type="text" rows="10" cols="70" placeholder='inserte comentario'></textarea>
+                    <label class="label setting-label" for="comentario-{{ location }}">Comentario General: </label>
+                    <textarea class="input setting-input" name="comentario" id="comentario-{{ location }}" type="text" rows="10" cols="70" placeholder='inserte comentario'></textarea>
                 </div>
             </div>
             <div id="ui-loading-img-annotation-footer" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">

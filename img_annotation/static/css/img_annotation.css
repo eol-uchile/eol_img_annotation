@@ -10,7 +10,7 @@
     padding:0;
   }
 
-  .img_annotation_block #openseadragon {
+  .img_annotation_block .openseadragon {
     width:100%;
     height:550px;
   }

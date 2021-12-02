@@ -79,8 +79,9 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
           if (highlightBody)
             return highlightBody.value;
         }
+        osd = 'openseadragon-'+settings.location;
         var viewer = OpenSeadragon({
-          id: 'openseadragon',
+          id: osd,
           prefixUrl: settings.osd_resources,
           tileSources: settings.image_url
         });
@@ -115,8 +116,8 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
         let child = document.createElement("option");
         child.id = annotation.id.substring(1);
         child.value = annotation.id;
-        child.innerText = 'Anotacion ' + $(element).find('#annotations_xblock')[0].children.length;
-        $(element).find('#annotations_xblock')[0].appendChild(child);
+        child.innerText = 'Anotacion ' + $(element).find('select[name=annotations_xblock]')[0].children.length;
+        $(element).find('select[name=annotations_xblock]')[0].appendChild(child);
       });
     });
     anno.on('deleteAnnotation', function(annotation) {
@@ -126,7 +127,7 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
           $element.find('#img_annotation_wrong_label')[0].textContent = "Error en borrar, actualice la pagina e intente nuevamente.";
           $(element).find('#img_annotation_wrong_label').show();
         }
-        var select = $(element).find('#annotations_xblock');
+        var select = $(element).find('select[name=annotations_xblock]');
         select[0].removeChild(select.find(annotation.id)[0]);
       });
     });
@@ -139,7 +140,7 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
         }
       });
     });
-    $(element).find('#annotations_xblock')[0].addEventListener('change', function() {
+    $(element).find('select[name=annotations_xblock]')[0].addEventListener('change', function() {
       if(this.value != "0"){
         anno.selectAnnotation(this.value);
         anno.panTo(this.value, true);
