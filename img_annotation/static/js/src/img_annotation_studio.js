@@ -25,6 +25,10 @@ function ImgAnnotationStudioXBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify(data)).done(function(response) {
             if (response.result == 'success' && $.isFunction(runtime.notify)) {
                 runtime.notify('save', {state: 'end'});
+                var osd = document.getElementById('openseadragon-scripts');
+                if (osd == null){
+                    window.location.reload();
+                }
             }
             else {
                 runtime.notify('error',  {
