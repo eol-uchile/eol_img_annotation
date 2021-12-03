@@ -154,12 +154,16 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
       }
     });
     function setAnnotation(id, body, target) {
+      type = "FragmentSelector";
+      if (target.includes('svg')){
+        type = "SvgSelector";
+      }
       return {
         "type": "Annotation",
         "body": body,
         "target": {
           "selector": {
-            "type": "FragmentSelector",
+            "type": type,
             "conformsTo": "http://www.w3.org/TR/media-frags/",
             "value": target
           }

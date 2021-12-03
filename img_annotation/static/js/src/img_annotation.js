@@ -238,12 +238,16 @@ function ImgAnnotationXBlock(runtime, element, settings) {
           }
       });
       function setAnnotation(id, body, target) {
+        type = "FragmentSelector";
+        if (target.includes('svg')){
+          type = "SvgSelector";
+        }
         return {
           "type": "Annotation",
           "body": body,
           "target": {
             "selector": {
-              "type": "FragmentSelector",
+              "type": type,
               "conformsTo": "http://www.w3.org/TR/media-frags/",
               "value": target
             }
@@ -274,21 +278,6 @@ function ImgAnnotationXBlock(runtime, element, settings) {
           anno.panTo(this.value, true);
         }
       });
-      function setAnnotation(id, body, target) {
-        return {
-          "type": "Annotation",
-          "body": body,
-          "target": {
-            "selector": {
-              "type": "FragmentSelector",
-              "conformsTo": "http://www.w3.org/TR/media-frags/",
-              "value": target
-            }
-          },
-          "@context": "http://www.w3.org/ns/anno.jsonld",
-          "id": id
-        }
-      }
       function findPos(obj) {
         var curtop = 0;
         if (obj.offsetParent) {
