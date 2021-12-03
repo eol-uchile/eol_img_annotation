@@ -15,6 +15,8 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
   var handlerRemoveAnnotation = runtime.handlerUrl(element, 'removestudentannotations');
   var handlerUpdateAnnotation = runtime.handlerUrl(element, 'updatestudentannotations');
   var anno;
+  var selectorSquare = '<span class="a9s-toolbar-btn-inner"><svg viewBox="0 0 70 50"><g><rect x="12" y="10" width="46" height="30"></rect><g class="handles"><circle cx="12" cy="10" r="5"></circle><circle cx="58" cy="10" r="5"></circle><circle cx="12" cy="40" r="5"></circle><circle cx="58" cy="40" r="5"></circle></g></g></svg></span>';
+  var selectorPolygon = '<svg viewBox="0 0 70 50"><g><path d="M 5,14 60,5 55,45 18,38 Z"></path><g class="handles"><circle cx="5" cy="14" r="5"></circle><circle cx="60" cy="5" r="5"></circle><circle cx="55" cy="45" r="5"></circle><circle cx="18" cy="38" r="5"></circle></g></g></svg>';
   if (settings.image_url != ""){
     $(function($) {
         var ColorSelectorWidget = function(args) {
@@ -60,7 +62,9 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
         
           var container = document.createElement('div');
           container.className = 'colorselector-widget';
-          
+          if(args.annotation.body[0] === undefined){
+            args.annotation.body.push({"type": "TextualBody", "purpose": "highlighting", "value": "RED", "creator": {"id": settings.username, "name": settings.username}});
+          }
           var button1 = createButton('RED');
           var button2 = createButton('GREEN');
           var button3 = createButton('BLUE');
@@ -83,7 +87,8 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
         var viewer = OpenSeadragon({
           id: osd,
           prefixUrl: settings.osd_resources,
-          tileSources: settings.image_url
+          tileSources: settings.image_url,
+          showNavigator:  true
         });
         anno = OpenSeadragon.Annotorious(viewer, {
           locale: 'auto',
@@ -96,7 +101,8 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
           ]
         });
         //{widget: 'COMMENT', editable: 'MINE_ONLY', purposeSelector: true},
-        Annotorious.Toolbar(anno,  $(element).find('#toolbar')[0]);
+        toolbar = '#toolbar-'+settings.location;
+        Annotorious.Toolbar(anno,  $(element).find(toolbar)[0]);
         anno.setAuthInfo({
           id: settings.username,
           displayName: settings.username
@@ -104,7 +110,8 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
         settings.annotation.forEach(annotation => {
           anno.addAnnotation(setAnnotation(annotation.id, annotation.body, annotation.target), true);
         });
-        
+        $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorSquare;
+        $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorPolygon;
     });
     anno.on('createAnnotation', function(annotation) {
       $(element).find('#img_annotation_wrong_label').hide();
