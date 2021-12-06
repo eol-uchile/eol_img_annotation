@@ -450,7 +450,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
                   $element.find("#calificado")[0].textContent = parseInt($element.find("#calificado")[0].textContent) + 1;
                 }
                 e.target.disabled = false;
-                const index = settings.list_student.indexOf(Number(student_id));
+                var index = settings.list_student.indexOf(Number(student_id));
                 if (index > -1) {
                   settings.list_student.splice(index, 1);
                 }
@@ -479,6 +479,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         return Math.floor(Math.random() * (max - min) ) + min;
       }
       $(element).find('input[name=img-annotation-random]').live('click', function(e) {
+        console.log(settings.list_student);
         e.target.disabled = true;
         $(element).find('input[name=checkbox_annotation]')[0].checked = false;
         $(element).find('input[name=puntaje]')[0].disabled = true;
@@ -491,16 +492,16 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         $(element).find('#img_annotation_footer').hide();//label
         $(element).find('#img_annotation_wrong_footer').hide();
         $(element).find('input[name=img-annotation-save]').hide();
-        aux_list_student = settings.list_student;
+        let aux_list_student = settings.list_student.slice();
         var current_student = e.target.getAttribute('aria-controls');
-        const aux_index = aux_list_student.indexOf(Number(current_student));
+        var aux_index = aux_list_student.indexOf(Number(current_student));
         var id_student = "";
         if (aux_index > -1) {
           aux_list_student.splice(aux_index, 1);
         }
         if(aux_list_student.length > 0){
-          var index_student = getRndInteger(0, settings.list_student.length);
-          id_student = settings.list_student[index_student];
+          var index_student = getRndInteger(0, aux_list_student.length);
+          id_student = aux_list_student[index_student];
         }
         delete aux_list_student;
         if(id_student != ""){
