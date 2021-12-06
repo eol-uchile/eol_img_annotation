@@ -479,7 +479,6 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         return Math.floor(Math.random() * (max - min) ) + min;
       }
       $(element).find('input[name=img-annotation-random]').live('click', function(e) {
-        console.log(settings.list_student);
         e.target.disabled = true;
         $(element).find('input[name=checkbox_annotation]')[0].checked = false;
         $(element).find('input[name=puntaje]')[0].disabled = true;
