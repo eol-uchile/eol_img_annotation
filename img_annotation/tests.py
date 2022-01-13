@@ -4,6 +4,7 @@ Module To Test EolImgAnnotation XBlock
 
 from django.test import TestCase, Client
 from mock import MagicMock, Mock, patch
+from collections import namedtuple
 from django.contrib.auth.models import User
 from common.djangoapps.util.testing import UrlResetMixin
 from opaque_keys.edx.locations import Location
@@ -21,6 +22,7 @@ from .img_annotation import ImgAnnotationXBlock
 from .models import ImgAnnotationModel
 
 import json
+import xmltodict
 import unittest
 import logging
 import mock
@@ -66,13 +68,30 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         xblock.category = 'img_annotation'
         return xblock
 
+    def xml_to_dict(self, xml):
+        data = xmltodict.parse(xml)
+        dzi_format ={
+            'Image': {
+                'xmlns': data['Image']['@xmlns'],
+                'Url': 'https://test.image.cl/image_files/',
+                'Format': data['Image']['@Format'], 
+                'Overlap': data['Image']['@Overlap'], 
+                'TileSize': data['Image']['@TileSize'],
+                'Size': {
+                    'Height': data['Image']['Size']['@Height'],
+                    'Width': data['Image']['Size']['@Width']
+                }
+            }
+        }
+        return dzi_format
+
     def setUp(self):
         super(ImgAnnotationXBlockTestCase, self).setUp()
         """
         Creates an xblock
         """
         self.course = CourseFactory.create(org='foo', course='baz', run='bar')
-
+        self.xml_data = '<?xml version="1.0" encoding="UTF-8"?>\n<Image xmlns="http://schemas.microsoft.com/deepzoom/2008"\n  Format="jpeg"\n  Overlap="1"\n  TileSize="256"\n  >\n  <Size \n    Height="32256"\n    Width="65536"\n  />\n</Image>\n' 
         self.xblock = self.make_an_xblock()
         self.annotation = {
             "type": "Annotation",
@@ -402,16 +421,142 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
             'is_course_staff': True,
             'calificado': 0,
             'total_student': 2,
-            'list_annotation_staff':[]
+            'list_annotation_staff':[],
+            'have_data': False
         }
         expected_settings = {
             'username': self.staff_user.username,
-            'image_url': '',
             'puntajemax' : 1,
             'is_course_staff': True,
             'list_annotation_staff': [],
-            'annotation_staff': []
+            'annotation_staff': [],
+            'image_data': {}
         }
+        self.xblock.xmodule_runtime.user_is_staff = True
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        context, settings = self.xblock.get_context_settings()
+        for key in expected_context:
+            self.assertEqual(expected_context[key], context[key])
+        for key in expected_settings:
+            self.assertEqual(expected_settings[key], settings[key])
+
+    @patch('requests.get')
+    def test_student_view_staff_with_image_url(self, get):
+        """
+            Verify context and settings in student_view staff user
+        """
+        get.side_effect = [namedtuple("Request", ["status_code", "text"])(200, self.xml_data)]
+        expected_context = {
+            'list_annotation_student': [],
+            'is_course_staff': True,
+            'calificado': 0,
+            'total_student': 2,
+            'list_annotation_staff':[],
+            'have_data': True
+        }
+        expected_settings = {
+            'username': self.staff_user.username,
+            'puntajemax' : 1,
+            'is_course_staff': True,
+            'list_annotation_staff': [],
+            'annotation_staff': [],
+            'image_data': self.xml_to_dict(self.xml_data)
+        }
+        self.xblock.image_url = 'https://test.image.cl/image.dzi'
+        self.xblock.xmodule_runtime.user_is_staff = True
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        context, settings = self.xblock.get_context_settings()
+        for key in expected_context:
+            self.assertEqual(expected_context[key], context[key])
+        for key in expected_settings:
+            self.assertEqual(expected_settings[key], settings[key])
+
+    @patch('requests.get')
+    def test_student_view_staff_wrong_image_data(self, get):
+        """
+            Verify context and settings in student_view staff user
+        """
+        get.side_effect = [namedtuple("Request", ["status_code", "text"])(200, 'asdsadsadas')]
+        expected_context = {
+            'list_annotation_student': [],
+            'is_course_staff': True,
+            'calificado': 0,
+            'total_student': 2,
+            'list_annotation_staff':[],
+            'have_data': False
+        }
+        expected_settings = {
+            'username': self.staff_user.username,
+            'puntajemax' : 1,
+            'is_course_staff': True,
+            'list_annotation_staff': [],
+            'annotation_staff': [],
+            'image_data': {}
+        }
+        self.xblock.image_url = 'https://test.image.cl/image.dzi'
+        self.xblock.xmodule_runtime.user_is_staff = True
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        context, settings = self.xblock.get_context_settings()
+        for key in expected_context:
+            self.assertEqual(expected_context[key], context[key])
+        for key in expected_settings:
+            self.assertEqual(expected_settings[key], settings[key])
+
+    @patch('requests.get')
+    def test_student_view_staff_wrong_image_data_2(self, get):
+        """
+            Verify context and settings in student_view staff user
+        """
+        aux = '<?xml version="1.0" encoding="UTF-8"?>\n<Video xmlns="http://schemas.microsoft.com/deepzoom/2008"\n  Format="jpeg"\n  Overlap="1"\n  TileSize="256"\n  >\n  <Size \n    Height="32256"\n    Width="65536"\n  />\n</Video>\n' 
+        get.side_effect = [namedtuple("Request", ["status_code", "text"])(200, aux)]
+        expected_context = {
+            'list_annotation_student': [],
+            'is_course_staff': True,
+            'calificado': 0,
+            'total_student': 2,
+            'list_annotation_staff':[],
+            'have_data': False
+        }
+        expected_settings = {
+            'username': self.staff_user.username,
+            'puntajemax' : 1,
+            'is_course_staff': True,
+            'list_annotation_staff': [],
+            'annotation_staff': [],
+            'image_data': {}
+        }
+        self.xblock.image_url = 'https://test.image.cl/image.dzi'
+        self.xblock.xmodule_runtime.user_is_staff = True
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        context, settings = self.xblock.get_context_settings()
+        for key in expected_context:
+            self.assertEqual(expected_context[key], context[key])
+        for key in expected_settings:
+            self.assertEqual(expected_settings[key], settings[key])
+
+    @patch('requests.get')
+    def test_student_view_staff_wrong_request_image(self, get):
+        """
+            Verify context and settings in student_view staff user
+        """
+        get.side_effect = [namedtuple("Request", ["status_code", "text"])(403, self.xml_data)]
+        expected_context = {
+            'list_annotation_student': [],
+            'is_course_staff': True,
+            'calificado': 0,
+            'total_student': 2,
+            'list_annotation_staff':[],
+            'have_data': False
+        }
+        expected_settings = {
+            'username': self.staff_user.username,
+            'puntajemax' : 1,
+            'is_course_staff': True,
+            'list_annotation_staff': [],
+            'annotation_staff': [],
+            'image_data': {}
+        }
+        self.xblock.image_url = 'https://test.image.cl/image.dzi'
         self.xblock.xmodule_runtime.user_is_staff = True
         self.xblock.scope_ids.user_id = self.staff_user.id
         context, settings = self.xblock.get_context_settings()
@@ -429,16 +574,17 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
             'is_course_staff': False,
             'score': '',
             'comentario': '',
-            'list_annotation_staff':[]
+            'list_annotation_staff':[],
+            'have_data': False
         }
         expected_settings = {
             'username': self.student.username,
-            'image_url': '',
             'puntajemax' : 1,
             'is_course_staff': False,
             'list_annotation_staff': [],
             'annotation_staff': [],
-            'annotation':[]
+            'annotation':[],
+            'image_data': {}
         }
         self.xblock.xmodule_runtime.user_is_staff = False
         self.xblock.scope_ids.user_id = self.student.id

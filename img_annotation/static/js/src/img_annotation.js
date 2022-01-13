@@ -26,7 +26,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
     removeEditDropdown = function() {
       return $(".r6o-lastmodified-by:contains(" + settings.username + ")").parent().parent().find('.r6o-icon').hide();
     };
-    if (settings.image_url != ""){
+    if (Object.keys(settings.image_data).length > 0){
       $(function($) {
           var ColorSelectorWidget = function(args) {
             // 1. Find a current color setting in the annotation, if any
@@ -96,10 +96,11 @@ function ImgAnnotationXBlock(runtime, element, settings) {
               return highlightBody.value;
           }
           osd = 'openseadragon-'+settings.location;
+          
           var viewer = OpenSeadragon({
               id: osd,
               prefixUrl: settings.osd_resources,
-              tileSources: settings.image_url,
+              tileSources: settings.image_data,
               showNavigator:  true
           });
           anno = OpenSeadragon.Annotorious(viewer, {

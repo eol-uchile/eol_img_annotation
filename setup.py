@@ -28,6 +28,7 @@ setup(
     packages=["img_annotation"],
     install_requires=[
         'XBlock',
+        'xmltodict'
         ],
     classifiers=[
         "Programming Language :: Python :: 2",
