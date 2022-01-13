@@ -1,8 +1,8 @@
 <div class="img_annotation_block">
    <h2>{{xblock.display_name}}</h2>
-    {% if xblock.image_url == '' %}
+    {% if xblock.image_url == '' or not have_data %}
         <div class="alert alert-warning" style="line-height: 1;">
-            <p>El componente <strong>no se ha configurado correctamente</strong>.</p>
+            <p>El componente <strong>no se ha configurado correctamente</strong> o <strong>exite problemas con el link de la imagen</strong>.</p>
             <p>Contactese con el equipo del curso o mesa de ayuda.</p>
         </div>
     {% else %}
@@ -101,48 +101,20 @@
                     {% endfor %}
                 </select>
             </div>
-    {% endif %}
-    <label style="cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_main"></label>
-    <div id="toolbar-{{ location }}" style="display: inline-block;"></div>
-    <div class="wrapper-comp-setting" style="float: right;margin-top: 15px;">
-        <input type="checkbox" name='checkbox_annotation' id='checkbox_annotation-{{ location }}' value="1" checked>
-        <label for="checkbox_annotation-{{ location }}">Mostrar anotaciones de ayuda</label>
-    </div>
-    <div id="openseadragon-{{ location }}" class='openseadragon' style="display: flex;"></div>
-    {% if is_course_staff %}
-        <div class="wrap-instructor-info" style="display: block;">
-            <h3>Informacion Calificados</h3>
-            <p style="padding: 10px;text-align: left;">Estudiantes Calificados: <spin id="calificado">{{calificado}}</spin> de {{ total_student }}</p>
+        {% endif %}
+        <label style="cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_main"></label>
+        <div id="toolbar-{{ location }}" style="display: inline-block;"></div>
+        <div class="wrapper-comp-setting" style="float: right;margin-top: 15px;">
+            <input type="checkbox" name='checkbox_annotation' id='checkbox_annotation-{{ location }}' value="1" checked>
+            <label for="checkbox_annotation-{{ location }}">Mostrar anotaciones de ayuda</label>
         </div>
-        <div id="ui-loading-img-annotation-load" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
-            <p>
-            <span class="spin">
-                <span class="icon fa fa-refresh" aria-hidden="true"></span>
-            </span>
-            <span class="copy">Cargando</span>
-            </p>
-        </div>
-        <div class="wrap-instructor-info" style="display: block;" >
-            <div id="calificacion_student" style="display: none;">
-                <h3>Calificacion para: <spin id="student_username"></spin></h3>
-                <div class="wrapper-comp-setting" style="padding: 10px;">
-                    <label class="label setting-label" for="puntaje-{{ location }}">Puntaje: </label>
-                    <input class="input setting-input" name="puntaje" id="puntaje-{{ location }}" value="" type="number" min="0" max="{{ xblock.puntajemax }}"/>
-                </div>
-                <div class="wrapper-comp-setting" style="padding: 10px;">
-                    <label class="label setting-label" for="comentario-{{ location }}">Comentario General: </label>
-                    <textarea class="input setting-input" name="comentario" id="comentario-{{ location }}" type="text" rows="10" cols="70" placeholder='inserte comentario'></textarea>
-                </div>
+        <div id="openseadragon-{{ location }}" class='openseadragon' style="display: flex;"></div>
+        {% if is_course_staff %}
+            <div class="wrap-instructor-info" style="display: block;">
+                <h3>Informacion Calificados</h3>
+                <p style="padding: 10px;text-align: left;">Estudiantes Calificados: <spin id="calificado">{{calificado}}</spin> de {{ total_student }}</p>
             </div>
-            <div id="ui-loading-img-annotation-footer" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
-                <p>
-                <span class="spin">
-                    <span class="icon fa fa-refresh" aria-hidden="true"></span>
-                </span>
-                <span class="copy">Guardando</span>
-                </p>
-            </div>
-            <div id="ui-loading-img-annotation-random" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
+            <div id="ui-loading-img-annotation-load" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
                 <p>
                 <span class="spin">
                     <span class="icon fa fa-refresh" aria-hidden="true"></span>
@@ -150,16 +122,44 @@
                 <span class="copy">Cargando</span>
                 </p>
             </div>
-            <input name="img-annotation-save" type="button" style="width: 160px;margin-left: auto;" value="Guardar" aria-controls="">
-            <input name="img-annotation-random" type="button" style="margin-left: auto;" value="Evaluar Estudante Aleatorio" aria-controls="">
-        </div>
-        <label style="padding-top: 10px;cursor: default;color: royalblue;display: none; text-align: center;" id="img_annotation_footer"></label>
-        <label style="padding-top: 10px;cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_footer"></label>
-        <div aria-hidden="true" class="wrap-instructor-info">
-            <a class="instructor-info-action" name="img-annotation-button" href="#" aria-controls="grade-1-img-annotation-{{ location }}">
-                Calificar Estudiantes
-            </a>
-        </div>
+            <div class="wrap-instructor-info" style="display: block;" >
+                <div id="calificacion_student" style="display: none;">
+                    <h3>Calificacion para: <spin id="student_username"></spin></h3>
+                    <div class="wrapper-comp-setting" style="padding: 10px;">
+                        <label class="label setting-label" for="puntaje-{{ location }}">Puntaje: </label>
+                        <input class="input setting-input" name="puntaje" id="puntaje-{{ location }}" value="" type="number" min="0" max="{{ xblock.puntajemax }}"/>
+                    </div>
+                    <div class="wrapper-comp-setting" style="padding: 10px;">
+                        <label class="label setting-label" for="comentario-{{ location }}">Comentario General: </label>
+                        <textarea class="input setting-input" name="comentario" id="comentario-{{ location }}" type="text" rows="10" cols="70" placeholder='inserte comentario'></textarea>
+                    </div>
+                </div>
+                <div id="ui-loading-img-annotation-footer" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
+                    <p>
+                    <span class="spin">
+                        <span class="icon fa fa-refresh" aria-hidden="true"></span>
+                    </span>
+                    <span class="copy">Guardando</span>
+                    </p>
+                </div>
+                <div id="ui-loading-img-annotation-random" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
+                    <p>
+                    <span class="spin">
+                        <span class="icon fa fa-refresh" aria-hidden="true"></span>
+                    </span>
+                    <span class="copy">Cargando</span>
+                    </p>
+                </div>
+                <input name="img-annotation-save" type="button" style="width: 160px;margin-left: auto;" value="Guardar" aria-controls="">
+                <input name="img-annotation-random" type="button" style="margin-left: auto;" value="Evaluar Estudante Aleatorio" aria-controls="">
+            </div>
+            <label style="padding-top: 10px;cursor: default;color: royalblue;display: none; text-align: center;" id="img_annotation_footer"></label>
+            <label style="padding-top: 10px;cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_footer"></label>
+            <div aria-hidden="true" class="wrap-instructor-info">
+                <a class="instructor-info-action" name="img-annotation-button" href="#" aria-controls="grade-1-img-annotation-{{ location }}">
+                    Calificar Estudiantes
+                </a>
+            </div>
         {% else %}
         
         <div class="wrap-instructor-info" style="display: block;">
@@ -173,6 +173,6 @@
                 <label style="cursor: default;"> Comentarios: {{ comentario }}</label> 
             {% endif %}
         </div>
-    {% endif %}
+        {% endif %}
     {% endif %}
 </div>

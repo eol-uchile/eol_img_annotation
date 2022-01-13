@@ -6,8 +6,9 @@ import six.moves.urllib.parse
 import six.moves.urllib.request
 
 import logging
+import requests
+import xmltodict
 from six import text_type
-from django.conf import settings as DJANGO_SETTINGS
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String, Dict, Float, Boolean, List, DateTime, JSONField
 from xblock.fragment import Fragment
@@ -278,17 +279,19 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
     def author_view(self, context=None):
         from django.contrib.auth.models import User
         annotations = self.get_annotations_author()
+        image_data = self.get_data_dzi()
         context = {
             'xblock': self, 
             'location': str(self.location).split('@')[-1],
-            'annotation_author': [x['id'] for x in annotations]
+            'annotation_author': [x['id'] for x in annotations],
+            'have_data': len(image_data) > 0,
             }
         user = User.objects.get(id=self.scope_ids.user_id)
         settings = {
             'annotation': annotations,
             'location': str(self.location).split('@')[-1],
             'username': user.username,
-            'image_url': self.image_url,
+            'image_data': image_data,
             'osd_resources': self.runtime.local_resource_url(
                 self,
                 "static/images/"),
@@ -334,22 +337,53 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         frag.initialize_js('ImgAnnotationXBlock', json_args=settings)
         return frag
 
+    def get_data_dzi(self):
+        """
+            Get xml data from dzi link
+        """
+        if self.image_url != '':
+            try:
+                response = requests.get(self.image_url)
+                if response.status_code == 200:
+                    data = xmltodict.parse(response.text)
+                    dzi_format ={
+                        'Image': {
+                            'xmlns': data['Image']['@xmlns'],
+                            'Url': self.image_url[:-4] + '_files/',
+                            'Format': data['Image']['@Format'], 
+                            'Overlap': data['Image']['@Overlap'], 
+                            'TileSize': data['Image']['@TileSize'],
+                            'Size': {
+                                'Height': data['Image']['Size']['@Height'],
+                                'Width': data['Image']['Size']['@Width']
+                            }
+                        }
+                    }
+                    return dzi_format
+                else:
+                    logger.error('ImgAnnotation Error - Error to get dzi image, status_code: {}, block_id: {}'.format(response.status_code, str(self.location)))
+            except Exception as e:
+                logger.error('ImgAnnotation Error - Invalid Url of dzi image or invalid xml params, block_id: {}, error: {}'.format(str(self.location), str(e)))
+        return {}
+
     def get_context_settings(self):
         """
             Return context and settings by the user role
         """
         from django.contrib.auth.models import User
+        image_data = self.get_data_dzi()
         context = {
             'xblock': self,
             'location': str(self.location).split('@')[-1],
             'list_annotation_student': [],
+            'have_data': len(image_data) > 0,
             'is_course_staff': False
         }
         user = User.objects.get(id=self.scope_ids.user_id)
         settings = {
             'location': str(self.location).split('@')[-1],
             'username': user.username,
-            'image_url': self.image_url,
+            'image_data': image_data,
             'puntajemax' : self.puntajemax,
             'is_course_staff': False,
             'osd_resources': self.runtime.local_resource_url(
@@ -450,7 +484,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         """
         try:
             if not self.show_staff_grading_interface():
-                logger.error('EolImgAnnotation - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
+                logger.error('ImgAnnotation - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
                 return { 'text': 'user is not course staff', 'result': 'error'}
             json_annotation = data.get('annotation')
             target = json_annotation.get('target')
@@ -536,7 +570,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
             Return a list of students with their id, username and score
         """
         if not self.show_staff_grading_interface():
-            logger.error('EolImgAnnotation - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
+            logger.error('ImgAnnotation - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
             return { 'text': 'user is not course staff', 'result': 'error'}
         from django.contrib.auth.models import User
         from submissions import api as submissions_api

@@ -1,8 +1,8 @@
 <div class="img_annotation_block">
     <p style="text-align: justify;">{{ xblock.header_text }}</p>
-    {% if xblock.image_url == "" %}
+    {% if xblock.image_url == ""  or not have_data %}
         <div class="alert alert-warning">
-            <p>El componente <strong>no se ha configurado correctamente</strong>.</p>
+            <p>El componente <strong>no se ha configurado correctamente</strong> o <strong>exite problemas con el link de la imagen</strong>.</p>
             <p>Edita nuevamente, y revisa que todos los campos se han rellenado.</p>
         </div>
     {% else %}
