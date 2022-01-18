@@ -476,9 +476,6 @@ function ImgAnnotationXBlock(runtime, element, settings) {
             e.target.disabled = false;
         }
       });
-      function getRndInteger(min, max) {
-        return Math.floor(Math.random() * (max - min) ) + min;
-      }
       $(element).find('input[name=img-annotation-random]').live('click', function(e) {
         e.target.disabled = true;
         $(element).find('input[name=checkbox_annotation]')[0].checked = false;
@@ -499,9 +496,16 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         if (aux_index > -1) {
           aux_list_student.splice(aux_index, 1);
         }
+        else{
+          aux_index = 0;
+        }
         if(aux_list_student.length > 0){
-          var index_student = getRndInteger(0, aux_list_student.length);
-          id_student = aux_list_student[index_student];
+          if(aux_list_student.length == aux_index){
+            id_student = aux_list_student[0];
+          }
+          else{
+            id_student = aux_list_student[aux_index];
+          }
         }
         delete aux_list_student;
         if(id_student != ""){

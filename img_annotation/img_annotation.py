@@ -98,9 +98,16 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
     def is_course_staff(self):
         # pylint: disable=no-member
         """
-         Check if user is course staff.
+        Check if user is course staff.
         """
         return getattr(self.xmodule_runtime, 'user_is_staff', False)
+
+    def is_instructor(self):
+        # pylint: disable=no-member
+        """
+        Check if user role is instructor.
+        """
+        return self.xmodule_runtime.get_user_role() == 'instructor'
 
     def is_instructor(self):
         # pylint: disable=no-member
@@ -114,7 +121,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         Return if current user is staff and not in studio.
         """
         in_studio_preview = self.scope_ids.user_id is None
-        return self.is_course_staff() and not in_studio_preview
+        return (self.is_course_staff() or self.is_instructor()) and not in_studio_preview
     
     def get_annotations(self, student_id, role):
         """
@@ -398,7 +405,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
             enrolled_students = User.objects.filter(
                 courseenrollment__course_id=self.course_id,
                 courseenrollment__is_active=1
-            ).values('id')
+            ).order_by('username').values('id')
             filter_all_sub = {}
             all_submission = list(
                 submissions_api.get_all_course_submission_information(
@@ -480,7 +487,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
     @XBlock.json_handler
     def save_anno_xblock(self, data, suffix=''):
         """
-        Save annotation from aythor view
+        Save annotation from author view
         """
         try:
             if not self.show_staff_grading_interface():
@@ -500,7 +507,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
     @XBlock.json_handler
     def savestudentannotations(self, data, suffix=''):
         """
-            Save annotations in studio view
+            Save annotations in student view
         """
         try:
             json_annotation = data.get('annotation')

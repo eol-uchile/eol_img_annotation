@@ -125,7 +125,6 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
             CourseEnrollmentFactory(
                 user=self.staff_user,
                 course_id=self.course.id)
-            CourseStaffRole(self.course.id).add_users(self.staff_user)
 
     def test_validate_field_data(self):
         """
@@ -191,6 +190,29 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(expected[0]['id'], self.annotation['id'])
         self.assertEqual(expected[0]['target'], self.annotation['target']['selector']['value'])
         self.assertEqual(expected[0]['body'], self.annotation['body'])
+
+    @patch('img_annotation.img_annotation.ImgAnnotationXBlock.is_instructor')
+    def test_author_create_annotation_instructor(self, is_instructor):
+        """
+            Test create annotations in author view when user is instructor
+        """
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        self.xblock.xmodule_runtime.user_is_staff = False
+        is_instructor.return_value = True
+        data = json.dumps({
+            'annotation': self.annotation})
+        request.body = data.encode()
+        response = self.xblock.save_anno_xblock(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'success')
+        expected = self.xblock.get_annotations(self.staff_user.id, 'staff')
+        self.assertEqual(len(expected), 1)
+        self.assertEqual(expected[0]['id'], self.annotation['id'])
+        self.assertEqual(expected[0]['target'], self.annotation['target']['selector']['value'])
+        self.assertEqual(expected[0]['body'], self.annotation['body'])
+
 
     def test_author_create_annotation_error(self):
         """
