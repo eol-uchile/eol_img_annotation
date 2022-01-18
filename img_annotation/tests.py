@@ -275,6 +275,39 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(expected[0]['target'], self.annotation['target']['selector']['value'])
         self.assertEqual(expected[0]['body'], self.annotation['body'])
 
+    def test_get_annotation(self):
+        """
+            Test get annotations
+        """
+        anno = ImgAnnotationModel.objects.create(
+            annotation_id = "#123-456-789",
+            user = self.staff_user,
+            role = 'staff',
+            body = 'asdasdsa',
+            course_key = self.course.id,
+            usage_key = self.xblock.location,
+            target = 'test target'
+        )
+        anno2 = ImgAnnotationModel.objects.create(
+            annotation_id = "#333-456-789",
+            user = self.student,
+            role = 'student',
+            body = json.dumps(self.annotation['body']),
+            course_key = self.course.id,
+            usage_key = self.xblock.location,
+            target = 'test target'
+        )
+        response = self.xblock.get_annotations_author()
+        self.assertEqual(len(response), 1)
+        self.assertEqual(response[0]['id'], anno.annotation_id)
+        self.assertEqual(response[0]['target'], anno.target)
+        self.assertEqual(response[0]['body'], '')
+        response = self.xblock.get_annotations(self.student.id, 'student')
+        self.assertEqual(len(response), 1)
+        self.assertEqual(response[0]['id'], anno2.annotation_id)
+        self.assertEqual(response[0]['target'], anno2.target)
+        self.assertEqual(response[0]['body'], self.annotation['body'])
+
     def test_update_annotation_staff(self):
         """
             Test update annotations, when user is staff

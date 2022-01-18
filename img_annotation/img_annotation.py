@@ -135,8 +135,12 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
             usage_key=self.location,
             role=role
         ).values('annotation_id', 'body', 'target')
-
-        return [{'id': x['annotation_id'], 'body': json.loads(x['body']), 'target': x['target']} for x in annotations]
+        try:
+            data = [{'id': x['annotation_id'], 'body': json.loads(x['body']), 'target': x['target']} for x in annotations]
+        except json.decoder.JSONDecodeError as e:
+            logger.error('ImgAnnotation Error decode json body, block_id: {}, student_id: {}, error: {}'.format(self.block_id, student_id, str(e)))
+            data = [{'id': x['annotation_id'], 'body': '', 'target': x['target']} for x in annotations]
+        return data
 
     def max_score(self):
         return self.puntajemax
@@ -153,7 +157,12 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
             role='staff'
         ).values('annotation_id', 'body', 'target')
 
-        return [{'id': x['annotation_id'], 'body': json.loads(x['body']), 'target': x['target']} for x in annotations]
+        try:
+            data = [{'id': x['annotation_id'], 'body': json.loads(x['body']), 'target': x['target']} for x in annotations]
+        except json.decoder.JSONDecodeError as e:
+            logger.error('ImgAnnotation Error decode json body, block_id: {}, error: {}'.format(self.block_id, str(e)))
+            data = [{'id': x['annotation_id'], 'body': '', 'target': x['target']} for x in annotations]
+        return data
 
     def delete_annotation(self, student_id, annotation_id):
         """

@@ -22,4 +22,4 @@ class ImgAnnotationModel(models.Model):
     body = models.TextField(blank=True, default="")
     course_key = CourseKeyField(max_length=255, default=None)
     usage_key = UsageKeyField(max_length=255, default=None)
-    target = models.CharField(max_length=250, default="")
+    target = models.TextField(blank=True, default="")
