@@ -199,6 +199,20 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
                 annotation.user.username
             )
         return annotation
+    
+    def get_imgannotation_model(self, annotation_id):
+        """
+        Get or Create img annotation model
+        """
+        # pylint: disable=no-member
+        from .models import ImgAnnotationModel
+        annotation = ImgAnnotationModel.objects.get(
+            course_key=self.course_id,
+            usage_key=self.location,
+            annotation_id=annotation_id
+        )
+
+        return annotation
 
     def get_or_create_student_module(self, student_id):
         """
@@ -546,7 +560,23 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         """
         try:
             json_annotation = data.get('annotation')
-            annotation = self.get_or_create_imgannotation_model(self.scope_ids.user_id, json_annotation.get('id'), 'student')
+            annotation = self.get_imgannotation_model(json_annotation.get('id'))
+            annotation.body = json.dumps(json_annotation['body'])
+            annotation.target = json_annotation['target']['selector']['value']
+            annotation.save()
+            return {'result': 'success'}
+        except Exception as e:
+            logger.error('ImgAnnotation Error in updatestudentannotations, block_id: {}, data: {}, error: {}'.format(self.block_id, data, str(e)))
+            return {'result': 'error'}
+
+    @XBlock.json_handler
+    def updatestudentannotations_author(self, data, suffix=''):
+        """
+            Update annotations author view and student view
+        """
+        try:
+            json_annotation = data.get('annotation')
+            annotation = self.get_imgannotation_model(json_annotation.get('id'))
             annotation.body = json.dumps(json_annotation['body'])
             annotation.target = json_annotation['target']['selector']['value']
             annotation.save()
@@ -562,8 +592,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         """
         try:
             json_annotation = data.get('annotation')
-            student_id = data.get('student_id')
-            annotation = self.get_or_create_imgannotation_model(student_id, json_annotation.get('id'), 'student')
+            annotation = self.get_imgannotation_model(json_annotation.get('id'))
             annotation.body = json.dumps(json_annotation['body'])
             annotation.save()
             return {'result': 'success'}

@@ -127,9 +127,8 @@ function ImgAnnotationXBlock(runtime, element, settings) {
               anno.addAnnotation(setAnnotation(annotation.id, annotation.body, annotation.target));
             });
             anno.on('updateAnnotation', function(annotation, previous) {
-              var student_id = $(element).find('input[name=img-annotation-save]')[0].getAttribute('aria-controls');
               $(element).find('#img_annotation_wrong_main').hide();
-              $.post(handlerUpdateAnnotationStaff, JSON.stringify({'annotation':annotation, 'student_id': student_id})).done(function(response) {
+              $.post(handlerUpdateAnnotationStaff, JSON.stringify({'annotation':annotation})).done(function(response) {
                 if(response.result != 'success'){
                   $element.find('#img_annotation_wrong_main')[0].textContent = "Error en editar, actualice la página e intente nuevamente.";
                   $(element).find('#img_annotation_wrong_main').show();

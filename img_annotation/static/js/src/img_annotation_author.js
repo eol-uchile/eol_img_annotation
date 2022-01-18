@@ -13,7 +13,7 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
   var $element = $(element);
   var handlerUrl = runtime.handlerUrl(element, 'save_anno_xblock');
   var handlerRemoveAnnotation = runtime.handlerUrl(element, 'removestudentannotations');
-  var handlerUpdateAnnotation = runtime.handlerUrl(element, 'updatestudentannotations');
+  var handlerUpdateAnnotation = runtime.handlerUrl(element, 'updatestudentannotations_author');
   var anno;
   var selectorSquare = '<span class="a9s-toolbar-btn-inner"><svg viewBox="0 0 70 50"><g><rect x="12" y="10" width="46" height="30"></rect><g class="handles"><circle cx="12" cy="10" r="5"></circle><circle cx="58" cy="10" r="5"></circle><circle cx="12" cy="40" r="5"></circle><circle cx="58" cy="40" r="5"></circle></g></g></svg></span>';
   var selectorPolygon = '<svg viewBox="0 0 70 50"><g><path d="M 5,14 60,5 55,45 18,38 Z"></path><g class="handles"><circle cx="5" cy="14" r="5"></circle><circle cx="60" cy="5" r="5"></circle><circle cx="55" cy="45" r="5"></circle><circle cx="18" cy="38" r="5"></circle></g></g></svg>';
