@@ -1,0 +1,82 @@
+# Spanish (Latin America) translations for OPEN.
+# Copyright (C) 2025 EOL
+# This file is distributed under the same license as the OPEN project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OPEN 0.1.0\n"
+"Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
+"POT-Creation-Date: 2025-04-16 16:20+0000\n"
+"PO-Revision-Date: 2025-04-15 19:21+0000\n"
+"Last-Translator: EOL <eol-ing@uchile.cl>\n"
+"Language: es_419\n"
+"Language-Team: es_419 <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: img_annotation/static/js/src/img_annotation.js:175
+#: img_annotation/static/js/src/img_annotation.js:246
+#: img_annotation/static/js/src/img_annotation_author.js:398
+msgid "Error editing, refresh the page and try again."
+msgstr "Error en editar, actualice la pagina e intente nuevamente."
+
+#: img_annotation/static/js/src/img_annotation.js:221
+#: img_annotation/static/js/src/img_annotation.js:235
+#: img_annotation/static/js/src/img_annotation_author.js:373
+msgid "Error saving, refresh the page and try again."
+msgstr "Error en guardar, actualice la pagina e intente nuevamente."
+
+#: img_annotation/static/js/src/img_annotation.js:227
+msgid "Annotation "
+msgstr "Anotación "
+
+#: img_annotation/static/js/src/img_annotation.js:432
+#: img_annotation/static/js/src/img_annotation.js:438
+msgid "Refresh the page and try again."
+msgstr "Actualice la página e intente nuevamente."
+
+#: img_annotation/static/js/src/img_annotation.js:455
+msgid "Max Score: "
+msgstr "Puntaje máximo: "
+
+#: img_annotation/static/js/src/img_annotation.js:460
+msgid "User does not have permissions to access the data."
+msgstr "Usuario no tiene permisos para obtener los datos."
+
+#: img_annotation/static/js/src/img_annotation.js:469
+msgid "An error has occurred in obtaining the data."
+msgstr "Se ha producido un error en obtener los datos."
+
+#: img_annotation/static/js/src/img_annotation.js:488
+msgid "Saved Correctly"
+msgstr "Guardado Correctamente"
+
+#: img_annotation/static/js/src/img_annotation.js:500
+#: img_annotation/static/js/src/img_annotation.js:505
+msgid "Error - Refresh the page and try again."
+msgstr "Error - Actualice la página e intente nuevamente."
+
+#: img_annotation/static/js/src/img_annotation.js:511
+msgid "Incorrect score, the score must be an integer between 0 and "
+msgstr "Puntaje incorrecto, el puntaje debe ser un número entero entre 0 y "
+
+#: img_annotation/static/js/src/img_annotation.js:574
+#: img_annotation/static/js/src/img_annotation.js:580
+msgid "All students have been evaluated."
+msgstr "Todos los estudiantes han sido evaluados."
+
+#: img_annotation/static/js/src/img_annotation_author.js:231
+msgid "Delete overlay"
+msgstr "Borrar overlay"
+
+#: img_annotation/static/js/src/img_annotation_author.js:234
+msgid "Close menu"
+msgstr "Cerrar menu"
+
+#: img_annotation/static/js/src/img_annotation_author.js:387
+msgid "Error deleting, refresh the page and try again."
+msgstr "Error en borrar, actualice la pagina e intente nuevamente."
