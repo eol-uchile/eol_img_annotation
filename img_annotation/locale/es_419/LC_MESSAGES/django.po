@@ -1,0 +1,219 @@
+# Spanish (Latin America) translations for EOL.
+# Copyright (C) 2025 EOL
+# This file is distributed under the same license as the EOL project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: EOL 1.0.0\n"
+"Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
+"POT-Creation-Date: 2025-05-13 15:11+0000\n"
+"PO-Revision-Date: 2025-05-13 15:06+0000\n"
+"Last-Translator: EOL <eol-ing@uchile.cl>\n"
+"Language: es_419\n"
+"Language-Team: es_419 <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: img_annotation/static/html/author_view.html:5
+#: img_annotation/static/html/img_annotation.html:5
+msgid "The component"
+msgstr "El componente"
+
+#: img_annotation/static/html/author_view.html:5
+#: img_annotation/static/html/img_annotation.html:5
+msgid "has not been configured correctly"
+msgstr "no se ha configurado correctamente"
+
+#: img_annotation/static/html/author_view.html:5
+#: img_annotation/static/html/img_annotation.html:5
+msgid "or"
+msgstr "o"
+
+#: img_annotation/static/html/author_view.html:5
+msgid "there are problems with the image link."
+msgstr "existen problemas con el link de la imagen"
+
+#: img_annotation/static/html/author_view.html:6
+msgid "Try again, and check that all fields are filled in."
+msgstr "Edita nuevamente y revisa que todos los campos se han rellenado."
+
+#: img_annotation/static/html/author_view.html:10
+msgid "You can add annotations here as help annotations for all students to see."
+msgstr ""
+"Puedes agregar anotaciones acá como anotaciones de ayuda que podrán ver "
+"todos los estudiantes."
+
+#: img_annotation/static/html/author_view.html:13
+#: img_annotation/static/html/img_annotation.html:67
+#: img_annotation/static/html/img_annotation.html:87
+msgid "Help Annotations:"
+msgstr "Anotaciones de ayuda:"
+
+#: img_annotation/static/html/author_view.html:15
+#: img_annotation/static/html/img_annotation.html:69
+#: img_annotation/static/html/img_annotation.html:78
+#: img_annotation/static/html/img_annotation.html:89
+#: img_annotation/static/html/img_annotation.html:98
+msgid "Select an annotation"
+msgstr "Selecciona una anotación"
+
+#: img_annotation/static/html/author_view.html:17
+#: img_annotation/static/html/img_annotation.html:71
+#: img_annotation/static/html/img_annotation.html:80
+#: img_annotation/static/html/img_annotation.html:91
+#: img_annotation/static/html/img_annotation.html:100
+msgid "Annotation"
+msgstr "Anotación"
+
+#: img_annotation/static/html/author_view.html:23
+#: img_annotation/static/html/img_annotation.html:76
+msgid "Annotations:"
+msgstr "Anotaciones:"
+
+#: img_annotation/static/html/author_view.html:26
+msgid "Overlays:"
+msgstr "Overlays:"
+
+#: img_annotation/static/html/author_view.html:27
+msgid "Add Overlay"
+msgstr "Agregar Overlay"
+
+#: img_annotation/static/html/author_view.html:27
+msgid "Add overlay"
+msgstr "Agrega un overlay"
+
+#: img_annotation/static/html/author_view.html:28
+msgid "Add Arrow Overlay"
+msgstr "Agregar overlay (flecha)"
+
+#: img_annotation/static/html/author_view.html:28
+msgid "Add arrow"
+msgstr "Agrega flecha"
+
+#: img_annotation/static/html/img_annotation.html:5
+msgid "there are problems with the image link"
+msgstr "existen problemas con el link de la imagen"
+
+#: img_annotation/static/html/img_annotation.html:6
+msgid "Contact the course team or help desk."
+msgstr "Contáctate con el equipo del curso o mesa de ayuda."
+
+#: img_annotation/static/html/img_annotation.html:10
+msgid "Seeing annotations by:"
+msgstr "Viendo anotaciones de:"
+
+#: img_annotation/static/html/img_annotation.html:26
+#: img_annotation/static/html/img_annotation.html:39
+msgid "Students"
+msgstr "Estudiantes"
+
+#: img_annotation/static/html/img_annotation.html:40
+msgid "Score"
+msgstr "Puntaje"
+
+#: img_annotation/static/html/img_annotation.html:41
+msgid "Actions"
+msgstr "Acciones"
+
+#: img_annotation/static/html/img_annotation.html:53
+msgid "Close"
+msgstr "Cerrar"
+
+#: img_annotation/static/html/img_annotation.html:58
+msgid "Show only users without evaluation"
+msgstr "Mostrar solo usuarios sin evaluar"
+
+#: img_annotation/static/html/img_annotation.html:96
+msgid "My Annotations"
+msgstr "Mis anotaciones:"
+
+#: img_annotation/static/html/img_annotation.html:109
+msgid "Display help Annotations"
+msgstr "Mostrar anotaciones de ayuda"
+
+#: img_annotation/static/html/img_annotation.html:114
+msgid "Graded students information"
+msgstr "Información de estudiantes calificados"
+
+#: img_annotation/static/html/img_annotation.html:115
+msgid "Graded students:"
+msgstr "Estudiantes Calificados"
+
+#: img_annotation/static/html/img_annotation.html:122
+#: img_annotation/static/html/img_annotation.html:150
+msgid "Loading"
+msgstr "Cargando"
+
+#: img_annotation/static/html/img_annotation.html:127
+msgid "Grade for: "
+msgstr "Calificación para: "
+
+#: img_annotation/static/html/img_annotation.html:129
+#: img_annotation/static/html/img_annotation.html:166
+msgid "Score:"
+msgstr "Puntaje:"
+
+#: img_annotation/static/html/img_annotation.html:133
+msgid "General comment:"
+msgstr "Comentario General:"
+
+#: img_annotation/static/html/img_annotation.html:134
+msgid "Insert comment"
+msgstr "Inserte un comentario"
+
+#: img_annotation/static/html/img_annotation.html:142
+msgid "Saving"
+msgstr "Guardando"
+
+#: img_annotation/static/html/img_annotation.html:160
+msgid "Grade Students"
+msgstr "Calificar Estudiantes"
+
+#: img_annotation/static/html/img_annotation.html:168
+msgid "Not graded"
+msgstr "No tiene calificaciones"
+
+#: img_annotation/static/html/img_annotation.html:170
+msgid "Graded with:"
+msgstr "Calificado con:"
+
+#: img_annotation/static/html/img_annotation.html:170
+msgid "of"
+msgstr "de"
+
+#: img_annotation/static/html/img_annotation.html:173
+msgid "Comments:"
+msgstr "Comentarios:"
+
+#: img_annotation/static/html/studio_view.html:5
+msgid "Display name"
+msgstr "Nombre"
+
+#: img_annotation/static/html/studio_view.html:11
+msgid "Image URL (DZI format)"
+msgstr "Url imagen (formato DZI)"
+
+#: img_annotation/static/html/studio_view.html:17
+msgid "Header"
+msgstr "Encabezado"
+
+#: img_annotation/static/html/studio_view.html:18
+msgid "Insert component header"
+msgstr "Inserta el encabezado del componente"
+
+#: img_annotation/static/html/studio_view.html:23
+msgid "Max Score"
+msgstr "Puntaje Máximo"
+
+#: img_annotation/static/html/studio_view.html:31
+msgid "Save"
+msgstr "Guardar"
+
+#: img_annotation/static/html/studio_view.html:34
+msgid "Cancel"
+msgstr "Cancelar"
+
