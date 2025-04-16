@@ -1,7 +1,7 @@
 
 import os
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def package_data(pkg, roots):
     """Generic function to find package_data.
@@ -25,7 +25,7 @@ setup(
     author_email="luis.santana@uchile.cl",
     description=".",
     url="https://eol.uchile.cl",
-    packages=["img_annotation"],
+    packages=find_packages(),
     install_requires=[
         'XBlock',
         'xmltodict'
@@ -44,5 +44,4 @@ setup(
             "img_annotation = img_annotation.apps:ImgAnnotationConfig",
         ],
     },
-    package_data=package_data("img_annotation", ["static", "public"]),
 )
