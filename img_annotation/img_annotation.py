@@ -1,24 +1,23 @@
-import pkg_resources
-import six
+# Python Standard Libraries
 import json
-import six.moves.urllib.error
-import six.moves.urllib.parse
-import six.moves.urllib.request
-
 import logging
+
+# Installed packages (via pip)
+import pkg_resources
 import requests
+import six
 import xmltodict
-from six import text_type
-from xblock.core import XBlock
-from xblock.fields import Integer, Scope, String, Dict, Float, Boolean, List, DateTime, JSONField
-from xblock.fragment import Fragment
-from xblockutils.studio_editable import StudioEditableXBlockMixin
-from xblockutils.resources import ResourceLoader
 from django.template import Context, Template
-from opaque_keys import InvalidKeyError
-from opaque_keys.edx.keys import CourseKey
-from django.http import Http404, HttpResponse
-from django.urls import reverse
+
+# Edx dependencies
+from xblock.core import XBlock
+from xblock.fragment import Fragment
+from xblock.fields import Integer, Scope, String
+from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin
+
+# Internal project dependencies
+
 
 logger = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
@@ -164,6 +163,24 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
             data = [{'id': x['annotation_id'], 'body': '', 'target': x['target']} for x in annotations]
         return data
 
+    def delete_overlays(self, overlay_id):
+        """
+        Delete overlay by its id.
+        """
+        try:
+            from .models import OverlayModel
+            overlay = OverlayModel.objects.filter(
+                id=overlay_id
+            )
+            if overlay:
+                overlay.delete()
+                return True
+            else:
+                return False
+        except Exception as e:
+            logger.error('ImgAnnotation Error delete_overlays: {}'.format(str(e)))
+            return False
+
     def delete_annotation(self, student_id, annotation_id):
         """
         delete annotation by annotation id and student id
@@ -184,6 +201,29 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         except Exception as e:
             logger.error('ImgAnnotation Error delete_annotation: {}'.format(str(e)))
             return False
+        
+    def get_or_create_overlay_model(self, student_id, overlay_type, x, y):
+        """
+        Get or Create overlay model
+        """
+        # pylint: disable=no-member
+        from .models import OverlayModel
+        overlay, created = OverlayModel.objects.get_or_create(
+            course_key=self.course_id,
+            usage_key=self.location,
+            user_id=student_id,
+            type=overlay_type,
+            position_x = x,
+            position_y = y
+        )
+        if created:
+            logger.info(
+                "Created overlay id: %s [course: %s] [student: %s]",
+                overlay.id,
+                overlay.course_key,
+                overlay.user.username
+            )
+        return overlay
 
     def get_or_create_imgannotation_model(self, student_id, annotation_id, role):
         """
@@ -306,9 +346,24 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
             "item_type": XBLOCK_TYPE,
         }
 
+    def get_overlays(self):
+        """
+        Return overlays for course_id, block_id
+        """
+        from .models import OverlayModel
+
+        overlays = OverlayModel.objects.filter(
+            course_key=self.course_id,
+            usage_key=self.location,
+        ).values('id', 'type', 'height', 'width', 'position_x', 'position_y')
+        data = [{'id': x['id'], 'type': x['type'], 'height': x['height'], 'width': x['width'], 'position_x': x['position_x'], 'position_y': x['position_y']} for x in overlays]
+        return data
+        
+
     def author_view(self, context=None):
         from django.contrib.auth.models import User
         annotations = self.get_annotations_author()
+        overlays = self.get_overlays()
         image_data = self.get_data_dzi()
         context = {
             'xblock': self, 
@@ -319,6 +374,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         user = User.objects.get(id=self.scope_ids.user_id)
         settings = {
             'annotation': annotations,
+            'overlays': overlays,
             'location': str(self.location).split('@')[-1],
             'username': user.username,
             'image_data': image_data,
@@ -329,9 +385,9 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         template = self.render_template(
             'static/html/author_view.html', context)
         frag = Fragment(template)
-        frag.add_css(self.resource_string("static/css/annotorious.min.css"))
-        frag.add_css(self.resource_string("static/css/img_annotation.css"))
-        frag.add_javascript(self.resource_string("static/js/src/img_annotation_author.js"))
+        frag.add_css(str(self.resource_string("static/css/annotorious.min.css")))
+        frag.add_css(str(self.resource_string("static/css/img_annotation.css")))
+        frag.add_javascript(str(self.resource_string("static/js/src/img_annotation_author.js")))
         frag.initialize_js('ImgAnnotationAuthorXBlock', json_args=settings)
         return frag
 
@@ -360,9 +416,9 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/img_annotation.css"))
         frag.add_css(self.resource_string("static/css/annotorious.min.css"))
-        frag.add_javascript(self.resource_string("static/img_annotation/openseadragon.2.4.2.min.js"))
-        frag.add_javascript(self.resource_string("static/img_annotation/openseadragon-annotorious.min.js"))
-        frag.add_javascript(self.resource_string("static/img_annotation/annotorious-toolbar.min.js"))
+        frag.add_javascript(self.resource_string("static/js/src/openseadragon.5.0.1.min.js"))
+        frag.add_javascript(self.resource_string("static/js/src/openseadragon-annotorious.min.js"))
+        frag.add_javascript(self.resource_string("static/js/src/annotorious-toolbar.min.js"))
         frag.add_javascript(self.resource_string("static/js/src/img_annotation.js"))
         frag.initialize_js('ImgAnnotationXBlock', json_args=settings)
         return frag
@@ -402,6 +458,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         """
         from django.contrib.auth.models import User
         image_data = self.get_data_dzi()
+        overlays = self.get_overlays()
         context = {
             'xblock': self,
             'location': str(self.location).split('@')[-1],
@@ -412,6 +469,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         user = User.objects.get(id=self.scope_ids.user_id)
         settings = {
             'location': str(self.location).split('@')[-1],
+            'overlays': overlays,
             'username': user.username,
             'image_data': image_data,
             'puntajemax' : self.puntajemax,
@@ -505,6 +563,45 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
                 return {'result': 'error'}
         except Exception as e:
             logger.error('ImgAnnotation Error in studio_submit, block_id: {}, data: {}, error: {}'.format(self.block_id, data, str(e)))
+            return {'result': 'error'}
+        
+    @XBlock.json_handler
+    def save_overlay_xblock(self, data, suffix=''):
+        """
+        Save overlay from author view
+        """
+        try:
+            if not self.show_staff_grading_interface():
+                logger.error('ImgAnnotation - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
+                return { 'text': 'user is not course staff', 'result': 'error'}
+            json_overlay = data.get('overlay')
+            overlay = self.get_or_create_overlay_model(self.scope_ids.user_id, json_overlay.get('type'), json_overlay.get('position_x'), json_overlay.get('position_y'))
+            if overlay.type == 'highlighted_overlay':
+                overlay.width = json_overlay.get('width')
+                overlay.height = json_overlay.get('height')
+            overlay.save()
+            return {'result': 'success', 'overlay_id': overlay.id}
+        except Exception as e:
+            logger.error('ImgAnnotation Error in save_overlay_xblock, block_id: {}, data: {}, error: {}'.format(self.block_id, data, str(e)))
+            return {'result': 'error'}
+        
+    @XBlock.json_handler
+    def delete_overlay_xblock(self, data, suffix=''):
+        """
+        Delete overlay from database given its id.
+        """
+        try:
+            if not self.show_staff_grading_interface():
+                logger.error('ImgAnnotation - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
+                return { 'text': 'user is not course staff', 'result': 'error'}
+            overlay_id = data.get('id')
+            overlay = self.delete_overlays(overlay_id)
+            if overlay:
+                return {'result': 'success', 'overlay_id': overlay_id}
+            else:
+                return {'result': 'overlay not found', 'overlay_id': overlay_id}
+        except Exception as e:
+            logger.error('ImgAnnotation Error in delete_overlay_xblock, block_id: {}, data: {}, error: {}'.format(self.block_id, data, str(e)))
             return {'result': 'error'}
 
     @XBlock.json_handler

@@ -11,6 +11,8 @@
 function ImgAnnotationAuthorXBlock(runtime, element, settings) {
   var $ = window.jQuery;
   var $element = $(element);
+  var handlerSaveOverlay = runtime.handlerUrl(element, 'save_overlay_xblock');
+  var handlerDeleteOverlay = runtime.handlerUrl(element, 'delete_overlay_xblock');
   var handlerUrl = runtime.handlerUrl(element, 'save_anno_xblock');
   var handlerRemoveAnnotation = runtime.handlerUrl(element, 'removestudentannotations');
   var handlerUpdateAnnotation = runtime.handlerUrl(element, 'updatestudentannotations_author');
@@ -84,15 +86,177 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
             return highlightBody.value;
         }
         osd = 'openseadragon-'+settings.location;
+
+        var createRectangleButton = document.getElementById("overlay-draw-button-" + settings.location);
+        var createArrowButton = document.getElementById("overlay-draw-button-arrow-" + settings.location);
+
+          // Function to toggle pressed state and disable viewer zoom and movement while adding overlays.
+          function toggleButtonState(button) {
+            // If the button is already pressed, unpress it and enable image movement.
+            if (button.classList.contains('pressed')) {
+              button.classList.remove('pressed');
+              // Adds a small delay to avoid zooming in after adding an arrow.
+              setTimeout(() => {
+                viewer.panHorizontal = true;
+                viewer.panVertical = true;
+                viewer.zoomPerClick = 2;
+                viewer.zoomPerScroll = 1.2;
+              }, 200);
+            } else {
+              // Otherwise mark it as pressed and disable image movement.
+              button.classList.add('pressed');
+              viewer.panHorizontal = false;
+              viewer.panVertical = false;
+              viewer.zoomPerClick = 1;
+              viewer.zoomPerScroll = 1;
+            }
+          };
+
+          createRectangleButton.addEventListener('click', () => {
+            // Unpress other button if it's pressed.
+            if (createArrowButton.classList.contains('pressed')) {
+              createArrowButton.classList.remove('pressed');
+            }
+            toggleButtonState(createRectangleButton);
+          });
+
+          createArrowButton.addEventListener('click', () => {
+            // Unpress other button if it's pressed.
+            if (createRectangleButton.classList.contains('pressed')) {
+              createRectangleButton.classList.remove('pressed');
+            }
+            toggleButtonState(createArrowButton);
+          });
+
+
         var viewer = OpenSeadragon({
           id: osd,
           prefixUrl: settings.osd_resources,
           tileSources: settings.image_data,
-          showNavigator:  true
+          showNavigator: true,
+          // Initial rotation angle
+          degrees: 0,
+          // Show rotation buttons
+          showRotationControl: true,
+          // Enable touch rotation on tactile devices
+          gestureSettingsTouch: {
+              pinchRotate: true
+          }
         });
+        
+        viewer.addHandler('open', function() {
+          settings.overlays.forEach(o => {
+            if (o.type == 'highlighted_overlay') {
+            var elt = document.createElement("div");
+            elt.className = 'highlight';
+            viewer.addOverlay({
+              element: elt,
+              location: new OpenSeadragon.Rect(Number(o.position_x), Number(o.position_y), Number(o.width), Number(o.height))
+            });
+            }
+            else if (o.type == 'fixed_size_overlay') {
+              var elt = document.createElement("img");
+              elt.src = "/static/images/Red_Arrow_Right.svg";
+              elt.width = 20;
+              elt.height = 20;
+              elt.style.display = "block";  
+              elt.className = 'right-arrow-overlay';
+              viewer.addOverlay({
+                element: elt,
+                location: new OpenSeadragon.Point(Number(o.position_x), Number(o.position_y)),
+                placement: 'RIGHT',
+                checkResize: false});
+            }
+            else return;
+            new OpenSeadragon.MouseTracker({
+              element: elt,
+              clickHandler: function(e) {
+                showDeleteMenu(o.position_x, o.position_y, elt, o.id, viewer);
+              },
+          });
+          });
+          }); 
+
+        // Handler for drawing arrow overlays.
+        viewer.addHandler("canvas-press", function(event) {
+          if (!createArrowButton.classList.contains('pressed')) return;
+          let webPoint = event.position;
+          arrowPoint = viewer.viewport.pointFromPixel(webPoint);
+          create_arrow_overlay({'type': 'fixed_size_overlay', 'position_x': arrowPoint.x, 'position_y': arrowPoint.y}, viewer);
+          toggleButtonState(createArrowButton);
+          arrowPoint = null;
+        });
+
+        // Handler for drawing rectangle overlays.
+        viewer.addHandler("canvas-press", function(event) {
+          if (!createRectangleButton.classList.contains('pressed')) return;
+          let webPoint = event.position;
+          startPoint = viewer.viewport.pointFromPixel(webPoint);
+          startX = event.position.x;
+          startY = event.position.y;
+          dragOverlay = document.createElement("div");
+          dragOverlay.style.position = "absolute";
+          dragOverlay.style.border = "2px solid red";
+          dragOverlay.style.background = "transparent";
+          dragOverlay.style.pointerEvents = "none";
+          dragOverlay.style.left = webPoint.x + "px";
+          dragOverlay.style.top = webPoint.y + "px";
+          viewer.container.appendChild(dragOverlay);
+        });
+
+        // Handler for drawing rectangle overlays.
+        viewer.addHandler("canvas-drag", function(event) {
+          if (!createRectangleButton.classList.contains('pressed') || !startPoint) return;
+          let currentX = event.position.x;
+          let currentY = event.position.y;
+          let width = Math.abs(currentX - startX);
+          let height = Math.abs(currentY - startY);
+          dragOverlay.style.width = width + "px";
+          dragOverlay.style.height = height + "px";
+          dragOverlay.style.left = Math.min(startX, currentX) + "px";
+          dragOverlay.style.top = Math.min(startY, currentY) + "px";
+        });
+
+        let menu = document.createElement("div");
+        menu.id = "overlay-menu-" + settings.location;
+        menu.classList.add("overlay-menu");
+        menu.innerHTML = '<h3>' + gettext('Do you want to delete this overlay?') + '</h3>';
+        let removeOverlayButton = document.createElement('button');
+        removeOverlayButton.textContent = gettext('Yes');
+        removeOverlayButton.classList.add('delete');
+        let closeOverlayMenuButton = document.createElement('button');
+        closeOverlayMenuButton.textContent = gettext("No");
+        closeOverlayMenuButton.classList.add('close');
+        menu.appendChild(removeOverlayButton);
+        menu.appendChild(closeOverlayMenuButton);
+        viewer.container.appendChild(menu);
+        
+        // Handler for drawing rectangle overlays.
+        viewer.addHandler("canvas-release", function(event) {
+          if (!createRectangleButton.classList.contains('pressed') || !startPoint) return;
+
+          let webPoint = event.position;
+          let endPoint = viewer.viewport.pointFromPixel(webPoint);
+
+          let x = Math.min(startPoint.x, endPoint.x);
+          let y = Math.min(startPoint.y, endPoint.y);
+          let width = Math.abs(endPoint.x - startPoint.x);
+          let height = Math.abs(endPoint.y - startPoint.y);
+          // If the overlay has height and width, try to create it and reset the startPoint.
+          if (width > 0 && height > 0) {
+            startPoint = null;
+            create_rectangle_overlay({'type': 'highlighted_overlay', 'position_x': x, 'position_y': y, 'width': width, 'height': height}, viewer);
+          }
+          toggleButtonState(createRectangleButton);
+          if (dragOverlay) {
+            viewer.container.removeChild(dragOverlay);
+            dragOverlay = null;
+          }
+        })
+
         anno = OpenSeadragon.Annotorious(viewer, {
           locale: 'auto',
-          gigapixelMode: true,
+          gigapixelMode: false,
           allowEmpty: true,
           formatter: ColorFormatter,
           widgets: [
@@ -100,7 +264,6 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
             {widget: 'COMMENT', editable: 'MINE_ONLY'},
           ]
         });
-        //{widget: 'COMMENT', editable: 'MINE_ONLY', purposeSelector: true},
         toolbar = '#toolbar-'+settings.location;
         Annotorious.Toolbar(anno,  $(element).find(toolbar)[0]);
         anno.setAuthInfo({
@@ -111,13 +274,113 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
           anno.addAnnotation(setAnnotation(annotation.id, annotation.body, annotation.target), true);
         });
         $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorSquare;
+        $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].title = gettext("Add Annotation");
         $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorPolygon;
+        $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].title = gettext("Add Annotation");
     });
+
+    function create_arrow_overlay(overlay, viewer){
+      $.post(handlerSaveOverlay, JSON.stringify({'overlay': overlay})).done(function(response) {
+        if(response.result != 'success'){
+          return response.result, response.overlay_id
+        }
+        else{
+          var elt = document.createElement("img");
+          elt.src = "/static/images/Red_Arrow_Right.svg";
+          elt.width = 20;
+          elt.height = 20;
+          elt.style.display = "block";  
+          elt.className = 'right-arrow-overlay';
+          viewer.addOverlay({
+            element: elt,
+            location: new OpenSeadragon.Point(overlay.position_x, overlay.position_y),
+            placement: 'RIGHT',
+            checkResize: false});
+          new OpenSeadragon.MouseTracker({
+            element: elt,
+            clickHandler: function(e) {
+              showDeleteMenu(overlay.position_x, overlay.position_y, elt, response.overlay_id, viewer);
+            },
+        });
+        }
+      })
+    };
+
+    function create_rectangle_overlay(overlay, viewer){
+      $.post(handlerSaveOverlay, JSON.stringify({'overlay':overlay})).done(function(response) {
+        if(response.result != 'success'){
+          return response.result, response.overlay_id
+        }
+        else{
+          var elt = document.createElement("div");
+          elt.className = 'highlight';
+          viewer.addOverlay({
+            element: elt,
+            location: new OpenSeadragon.Rect(overlay.position_x, overlay.position_y, overlay.width, overlay.height)
+          });
+          new OpenSeadragon.MouseTracker({
+            element: elt,
+            clickHandler: function(e) {
+              showDeleteMenu(overlay.position_x, overlay.position_y, elt, response.overlay_id, viewer);
+            },
+        });
+          return response.result, response.overlay_id
+        }
+      });
+    };
+
+    // Opens a menu to delete the clicked overlay.
+    function showDeleteMenu(x, y, overlay, id, viewer) {   
+      let pixelPoint = viewer.viewport.pixelFromPoint(new OpenSeadragon.Point(Number(x), Number(y)));
+      menu = document.getElementById("overlay-menu-" + settings.location);
+
+      let width = parseFloat(getComputedStyle(menu)['width']);
+      let height = parseFloat(getComputedStyle(menu)['height']);
+
+      // Moves the delete menu if its too close to the edge.
+      if (pixelPoint.x + width > viewer.container.clientWidth){
+        pixelPoint.x = pixelPoint.x - width;
+      }
+
+      // Moves the delete menu if its too close to the edge.
+      if (pixelPoint.y + height > viewer.container.clientHeight){
+        pixelPoint.y = pixelPoint.y - height;
+      }
+
+      menu.style.left = `${pixelPoint.x}px`;
+      menu.style.top = `${pixelPoint.y}px`;
+      menu.style.display = "block";
+
+      let removeButton = menu.querySelector('.delete');
+      removeButton.onclick = () => {
+        deleteOverlay(id, overlay);
+        menu.style.display = "none";
+      };
+     
+      let closeButton = menu.querySelector('.close');
+      closeButton.onclick = () => {
+        menu.style.display = "none";
+      };
+    };
+
+    // Tries to delete an overlay from the database, in case of success it also deletes the overlay from the current view.
+    function deleteOverlay(id, overlay){
+      $.post(handlerDeleteOverlay, JSON.stringify({'id': id})).done(function(response) {
+        if(response.result != 'success'){
+          return response.result;
+        }
+        else{
+          overlay.remove();
+          return response.result;
+        }
+      });
+    };
+
     anno.on('createAnnotation', function(annotation) {
       $(element).find('#img_annotation_wrong_label').hide();
       $.post(handlerUrl, JSON.stringify({'annotation':annotation})).done(function(response) {
         if(response.result != 'success'){
-          $element.find('#img_annotation_wrong_label')[0].textContent = "Error en guardar, actualice la pagina e intente nuevamente.";
+          $element.find('#img_annotation_wrong_label')[0].textContent = gettext("Error saving, refresh the page and try again.");
           $(element).find('#img_annotation_wrong_label').show();
         }
         let child = document.createElement("option");
@@ -131,7 +394,7 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
       $(element).find('#img_annotation_wrong_label').hide();
       $.post(handlerRemoveAnnotation, JSON.stringify({'id':annotation.id})).done(function(response) {
         if(response.result != 'success'){
-          $element.find('#img_annotation_wrong_label')[0].textContent = "Error en borrar, actualice la pagina e intente nuevamente.";
+          $element.find('#img_annotation_wrong_label')[0].textContent = gettext("Error deleting, refresh the page and try again.");
           $(element).find('#img_annotation_wrong_label').show();
         }
         var select = $(element).find('select[name=annotations_xblock]');
@@ -142,7 +405,7 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
       $(element).find('#img_annotation_wrong_label').hide();
       $.post(handlerUpdateAnnotation, JSON.stringify({'annotation':annotation})).done(function(response) {
         if(response.result != 'success'){
-          $element.find('#img_annotation_wrong_label')[0].textContent = "Error en editar, actualice la pagina e intente nuevamente.";
+          $element.find('#img_annotation_wrong_label')[0].textContent = gettext("Error editing, refresh the page and try again.");
           $(element).find('#img_annotation_wrong_label').show();
         }
       });
