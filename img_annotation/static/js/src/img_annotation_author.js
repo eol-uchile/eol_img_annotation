@@ -144,11 +144,6 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
               pinchRotate: true
           }
         });
-
-        viewer.addHandler('rotate', function(event) {
-          console.log('rotate');
-          console.log(event);
-        });
         
         viewer.addHandler('open', function() {
           settings.overlays.forEach(o => {
