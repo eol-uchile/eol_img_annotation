@@ -20,10 +20,10 @@ def package_data(pkg, roots):
 
 setup(
     name="img_annotation",
-    version="0.0.1",
-    author="Luis Santana",
-    author_email="luis.santana@uchile.cl",
-    description=".",
+    version="1.0.0",
+    author="Oficina EOL UChile",
+    author_email="eol-ing@uchile.cl",
+    description="Xblock with a viewer for high-resolution zoomable images. It lets both students and instructor to add annotations over it.",
     url="https://eol.uchile.cl",
     packages=find_packages(),
     install_requires=[
