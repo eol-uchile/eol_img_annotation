@@ -23,3 +23,21 @@ class ImgAnnotationModel(models.Model):
     course_key = CourseKeyField(max_length=255, default=None)
     usage_key = UsageKeyField(max_length=255, default=None)
     target = models.TextField(blank=True, default="")
+
+class OverlayModel(models.Model):
+    """
+    Stores information related to overlays linked to an img_annotation_block.
+    """
+    class Meta:
+        index_together = [
+            ["course_key", "usage_key"],
+        ]
+    OVERLAY_CHOICES = (("highlighted_overlay", "rectangle_overlay"), ("fixed_size_overlay", "arrow_overlay"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.TextField(choices=OVERLAY_CHOICES)
+    course_key = CourseKeyField(max_length=255, default=None)
+    usage_key = UsageKeyField(max_length=255, default=None)
+    height = models.DecimalField(max_digits=47, decimal_places=45, null=True, blank=True)
+    width = models.DecimalField(max_digits=47, decimal_places=45, null=True, blank=True)
+    position_x = models.DecimalField(max_digits=47, decimal_places=45)
+    position_y = models.DecimalField(max_digits=47, decimal_places=45)

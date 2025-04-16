@@ -635,3 +635,72 @@
 .img_annotation_block .r6o-lastmodified-at {
   display: none;
 }
+
+.highlight{
+  opacity: 0.4;
+  outline: 12px auto;
+  background-color: white;
+  z-index: 1;      
+}
+
+.right-arrow-overlay{
+  z-index: 1;      
+}
+
+#overlayElement {
+  background-color: red;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+}
+
+#overlay-draw-button{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.overlay-menu{
+  position: absolute;
+  display: none;
+  background : white;
+  border: 5px black;
+  padding: 5px;
+  z-index: 2000;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+
+#menu-button {
+  background: green;
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.overlay-menu button:hover {
+  background: darkgreen;
+}
+
+.overlay-menu {
+  position: absolute;
+  top: 50px; 
+  right: 20px; 
+  background-color: #fff;
+  color: #333; 
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  
+  display: none; 
+  flex-direction: column; 
+  padding: 10px;
+  z-index: 1000;  
+  width: 220px; 
+}
+
+.overlay-menu button:hover {
+  background-color: #e0e0e0;
+}
+
+.overlay-menu .close:hover {
+  color: #666;
+}
