@@ -1,5 +1,7 @@
 # Imagen Annotation XBlock
 
+![Coverage Status](/coverage-badge.svg)
+
 ![https://github.com/eol-uchile/eol_img_annotation/actions](https://github.com/eol-uchile/eol_img_annotation/workflows/Python%20application/badge.svg)
 
 # Install
@@ -12,8 +14,13 @@
 ## TESTS
 **Prepare tests:**
 
-    > cd .github/
-    > docker-compose run --rm lms /openedx/requirements/eol_img_annotation/.github/test.sh
+- Install **act** following the instructions in [https://nektosact.com/installation/index.html](https://nektosact.com/installation/index.html)
+
+**Run tests:**
+- In a terminal at the root of the project
+    ```
+    act -W .github/workflows/pythonapp.yml
+    ```
 
 ## Notes
 
