@@ -134,14 +134,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
                   location: new OpenSeadragon.Point(Number(o.position_x), Number(o.position_y)),
                   placement: 'RIGHT',
                   checkResize: false});
-              }
-              else return;
-              new OpenSeadragon.MouseTracker({
-                element: elt,
-                clickHandler: function(e) {
-                  showMenu2(o.position_x, o.position_y, elt, o.id, viewer);
-                },
-            });
+              };
             });
             }); 
 

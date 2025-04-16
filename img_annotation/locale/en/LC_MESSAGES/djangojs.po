@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPEN 0.1.0\n"
 "Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
-"POT-Creation-Date: 2025-04-16 16:20+0000\n"
+"POT-Creation-Date: 2025-04-16 22:15+0000\n"
 "PO-Revision-Date: 2025-04-15 19:21+0000\n"
 "Last-Translator: EOL <eol-ing@uchile.cl>\n"
 "Language: en\n"
@@ -18,65 +18,66 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: img_annotation/static/js/src/img_annotation.js:175
-#: img_annotation/static/js/src/img_annotation.js:246
-#: img_annotation/static/js/src/img_annotation_author.js:398
+#: img_annotation/static/js/src/img_annotation.js:168
+#: img_annotation/static/js/src/img_annotation.js:239
+#: img_annotation/static/js/src/img_annotation_author.js:393
 msgid "Error editing, refresh the page and try again."
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:221
-#: img_annotation/static/js/src/img_annotation.js:235
-#: img_annotation/static/js/src/img_annotation_author.js:373
+#: img_annotation/static/js/src/img_annotation.js:214
+#: img_annotation/static/js/src/img_annotation.js:228
+#: img_annotation/static/js/src/img_annotation_author.js:368
 msgid "Error saving, refresh the page and try again."
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:227
+#: img_annotation/static/js/src/img_annotation.js:220
 msgid "Annotation "
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:432
-#: img_annotation/static/js/src/img_annotation.js:438
+#: img_annotation/static/js/src/img_annotation.js:425
+#: img_annotation/static/js/src/img_annotation.js:431
 msgid "Refresh the page and try again."
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:455
+#: img_annotation/static/js/src/img_annotation.js:448
 msgid "Max Score: "
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:460
+#: img_annotation/static/js/src/img_annotation.js:453
 msgid "User does not have permissions to access the data."
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:469
+#: img_annotation/static/js/src/img_annotation.js:462
 msgid "An error has occurred in obtaining the data."
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:488
+#: img_annotation/static/js/src/img_annotation.js:481
 msgid "Saved Correctly"
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:500
-#: img_annotation/static/js/src/img_annotation.js:505
+#: img_annotation/static/js/src/img_annotation.js:493
+#: img_annotation/static/js/src/img_annotation.js:498
 msgid "Error - Refresh the page and try again."
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:511
+#: img_annotation/static/js/src/img_annotation.js:504
 msgid "Incorrect score, the score must be an integer between 0 and "
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation.js:574
-#: img_annotation/static/js/src/img_annotation.js:580
+#: img_annotation/static/js/src/img_annotation.js:567
+#: img_annotation/static/js/src/img_annotation.js:573
 msgid "All students have been evaluated."
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation_author.js:231
+#: img_annotation/static/js/src/img_annotation_author.js:226
 msgid "Delete overlay"
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation_author.js:234
+#: img_annotation/static/js/src/img_annotation_author.js:229
 msgid "Close menu"
 msgstr ""
 
-#: img_annotation/static/js/src/img_annotation_author.js:387
+#: img_annotation/static/js/src/img_annotation_author.js:382
 msgid "Error deleting, refresh the page and try again."
 msgstr ""
+

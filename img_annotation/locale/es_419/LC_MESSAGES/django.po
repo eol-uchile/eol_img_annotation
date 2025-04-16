@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPEN 0.1.0\n"
 "Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
-"POT-Creation-Date: 2025-04-16 16:20+0000\n"
+"POT-Creation-Date: 2025-04-16 22:15+0000\n"
 "PO-Revision-Date: 2025-04-15 19:21+0000\n"
 "Last-Translator: EOL <eol-ing@uchile.cl>\n"
 "Language: es_419\n"
@@ -191,3 +191,4 @@ msgstr "Guardar"
 #: img_annotation/static/html/studio_view.html:34
 msgid "Cancel"
 msgstr "Cancelar"
+
