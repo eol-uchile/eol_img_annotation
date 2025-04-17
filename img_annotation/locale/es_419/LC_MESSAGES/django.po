@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPEN 0.1.0\n"
 "Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
-"POT-Creation-Date: 2025-04-17 18:44+0000\n"
+"POT-Creation-Date: 2025-04-17 20:00+0000\n"
 "PO-Revision-Date: 2025-04-15 19:21+0000\n"
 "Last-Translator: EOL <eol-ing@uchile.cl>\n"
 "Language: es_419\n"
@@ -79,8 +79,16 @@ msgid "Overlays:"
 msgstr "Overlays:"
 
 #: img_annotation/static/html/author_view.html:27
+msgid "Add Overlay"
+msgstr "Agregar Overlay"
+
+#: img_annotation/static/html/author_view.html:27
 msgid "Add overlay"
 msgstr "Agrega un overlay"
+
+#: img_annotation/static/html/author_view.html:28
+msgid "Add Arrow Overlay"
+msgstr "Agregar Flecha Overlay"
 
 #: img_annotation/static/html/author_view.html:28
 msgid "Add arrow"
@@ -140,6 +148,10 @@ msgstr "Estudiantes Calificados"
 msgid "Loading"
 msgstr "Cargando"
 
+#: img_annotation/static/html/img_annotation.html:127
+msgid "Grade for: "
+msgstr "Calificación para: "
+
 #: img_annotation/static/html/img_annotation.html:129
 #: img_annotation/static/html/img_annotation.html:166
 msgid "Score:"
@@ -148,6 +160,10 @@ msgstr "Puntaje:"
 #: img_annotation/static/html/img_annotation.html:133
 msgid "General comment:"
 msgstr "Comentario General:"
+
+#: img_annotation/static/html/img_annotation.html:134
+msgid "Insert comment"
+msgstr "Inserte comentario"
 
 #: img_annotation/static/html/img_annotation.html:142
 msgid "Saving"
@@ -184,6 +200,10 @@ msgstr "Url imagen (formato DZI)"
 #: img_annotation/static/html/studio_view.html:17
 msgid "Header"
 msgstr "Encabezado"
+
+#: img_annotation/static/html/studio_view.html:18
+msgid "Insert component header"
+msgstr "Inserte encabezado del componente"
 
 #: img_annotation/static/html/studio_view.html:23
 msgid "Max Score"

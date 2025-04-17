@@ -2,7 +2,7 @@
    <h2>{{xblock.display_name}}</h2>
     {% if xblock.image_url == '' or not have_data %}
         <div class="alert alert-warning" style="line-height: 1;">
-            <p>{{ _("The component") }} <strong>{{ _("has not been configured correctly") }}</strong> {{_("or")}} <strong>{{ _("there are problems with the image link") }}</strong>.</p>
+            <p>{{ _("The component") }} <strong>{{ _("has not been configured correctly") }}</strong> {{ _("or") }} <strong>{{ _("there are problems with the image link") }}</strong>.</p>
             <p>{{ _("Contact the course team or help desk.") }}</p>
         </div>
     {% else %}
@@ -111,27 +111,27 @@
         <div id="openseadragon-{{ location }}" class='openseadragon' style="display: flex;"></div>
         {% if is_course_staff %}
             <div class="wrap-instructor-info" style="display: block;">
-                <h3>{{ _("Graded students information")}}</h3>
-                <p style="padding: 10px;text-align: left;">{{ _("Graded students:")}} <spin id="calificado">{{calificado}}</spin> de {{ total_student }}</p>
+                <h3>{{ _("Graded students information") }}</h3>
+                <p style="padding: 10px;text-align: left;">{{ _("Graded students:") }} <spin id="calificado">{{calificado}}</spin> de {{ total_student }}</p>
             </div>
             <div id="ui-loading-img-annotation-load" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
                 <p>
                 <span class="spin">
                     <span class="icon fa fa-refresh" aria-hidden="true"></span>
                 </span>
-                <span class="copy">{{ _("Loading")}}</span>
+                <span class="copy">{{ _("Loading") }}</span>
                 </p>
             </div>
             <div class="wrap-instructor-info" style="display: block;" >
                 <div id="calificacion_student" style="display: none;">
-                    <h3>Calificacion para: <spin id="student_username"></spin></h3>
+                    <h3>{{ _("Grade for: ") }}<spin id="student_username"></spin></h3>
                     <div class="wrapper-comp-setting" style="padding: 10px;">
-                        <label class="label setting-label" for="puntaje-{{ location }}">{{ _("Score:")}} </label>
+                        <label class="label setting-label" for="puntaje-{{ location }}">{{ _("Score:") }} </label>
                         <input class="input setting-input" name="puntaje" id="puntaje-{{ location }}" value="" type="number" min="0" max="{{ xblock.puntajemax }}"/>
                     </div>
                     <div class="wrapper-comp-setting" style="padding: 10px;">
-                        <label class="label setting-label" for="comentario-{{ location }}">{{ _("General comment:")}} </label>
-                        <textarea class="input setting-input" name="comentario" id="comentario-{{ location }}" type="text" rows="10" cols="70" placeholder='inserte comentario'></textarea>
+                        <label class="label setting-label" for="comentario-{{ location }}">{{ _("General comment:") }} </label>
+                        <textarea class="input setting-input" name="comentario" id="comentario-{{ location }}" type="text" rows="10" cols="70" placeholder={{ _('Insert comment') }}></textarea>
                     </div>
                 </div>
                 <div id="ui-loading-img-annotation-footer" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
@@ -139,7 +139,7 @@
                     <span class="spin">
                         <span class="icon fa fa-refresh" aria-hidden="true"></span>
                     </span>
-                    <span class="copy">{{ _("Saving")}}</span>
+                    <span class="copy">{{ _("Saving") }}</span>
                     </p>
                 </div>
                 <div id="ui-loading-img-annotation-random" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
@@ -147,7 +147,7 @@
                     <span class="spin">
                         <span class="icon fa fa-refresh" aria-hidden="true"></span>
                     </span>
-                    <span class="copy">{{ _("Loading")}}</span>
+                    <span class="copy">{{ _("Loading") }}</span>
                     </p>
                 </div>
                 <input name="img-annotation-save" type="button" style="width: 160px;margin-left: auto;" value="Guardar" aria-controls="">
@@ -157,20 +157,20 @@
             <label style="padding-top: 10px;cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_footer"></label>
             <div aria-hidden="true" class="wrap-instructor-info">
                 <a class="instructor-info-action" name="img-annotation-button" href="#" aria-controls="grade-1-img-annotation-{{ location }}">
-                    {{ _("Grade Students")}}
+                    {{ _("Grade Students") }}
                 </a>
             </div>
         {% else %}
         
         <div class="wrap-instructor-info" style="display: block;">
-            <h3>{{ _("Score:")}}</h3>
+            <h3>{{ _("Score:") }}</h3>
             {% if score == '' %}
-                <label style="cursor: default;">{{ _("Not graded")}}</label>
+                <label style="cursor: default;">{{ _("Not graded") }}</label>
             {% else %}
-                <label style="cursor: default;"> {{ _("Graded with:")}} {{ score }} {{ _("of")}} {{ xblock.puntajemax }}</label></br>
+                <label style="cursor: default;"> {{ _("Graded with:") }} {{ score }} {{ _("of")}} {{ xblock.puntajemax }}</label></br>
             {% endif %}
             {% if comentario != '' %}
-                <label style="cursor: default;"> {{ _("Comments:")}} {{ comentario }}</label> 
+                <label style="cursor: default;"> {{ _("Comments:") }} {{ comentario }}</label> 
             {% endif %}
         </div>
         {% endif %}

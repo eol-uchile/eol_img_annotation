@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPEN 0.1.0\n"
 "Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
-"POT-Creation-Date: 2025-04-17 18:44+0000\n"
+"POT-Creation-Date: 2025-04-17 20:00+0000\n"
 "PO-Revision-Date: 2025-04-15 19:21+0000\n"
 "Last-Translator: EOL <eol-ing@uchile.cl>\n"
 "Language: es_419\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: img_annotation/static/js/src/img_annotation.js:242
 #: img_annotation/static/js/src/img_annotation_author.js:408
 msgid "Error editing, refresh the page and try again."
-msgstr "Error en editar, actualice la pagina e intente nuevamente."
+msgstr "Error al editar, actualice la página e intente nuevamente."
 
 #: img_annotation/static/js/src/img_annotation.js:209
 #: img_annotation/static/js/src/img_annotation.js:211
@@ -35,7 +35,7 @@ msgstr "Agregar Anotación"
 #: img_annotation/static/js/src/img_annotation.js:231
 #: img_annotation/static/js/src/img_annotation_author.js:383
 msgid "Error saving, refresh the page and try again."
-msgstr "Error al guardar, actualice la pagina e intente nuevamente."
+msgstr "Error al guardar, actualice la página e intente nuevamente."
 
 #: img_annotation/static/js/src/img_annotation.js:223
 msgid "Annotation "
@@ -56,7 +56,7 @@ msgstr "Usuario no tiene permisos para obtener los datos."
 
 #: img_annotation/static/js/src/img_annotation.js:465
 msgid "An error has occurred in obtaining the data."
-msgstr "Se ha producido un error en obtener los datos."
+msgstr "Se ha producido un error al obtener los datos."
 
 #: img_annotation/static/js/src/img_annotation.js:484
 msgid "Saved Correctly"
@@ -90,5 +90,5 @@ msgstr "No"
 
 #: img_annotation/static/js/src/img_annotation_author.js:397
 msgid "Error deleting, refresh the page and try again."
-msgstr "Error en borrar, actualice la pagina e intente nuevamente."
+msgstr "Error al borrar, actualice la página e intente nuevamente."
 

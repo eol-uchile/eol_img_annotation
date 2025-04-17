@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPEN 0.1.0\n"
 "Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
-"POT-Creation-Date: 2025-04-17 18:44+0000\n"
+"POT-Creation-Date: 2025-04-17 20:00+0000\n"
 "PO-Revision-Date: 2025-04-15 19:21+0000\n"
 "Last-Translator: EOL <eol-ing@uchile.cl>\n"
 "Language: en\n"
@@ -77,7 +77,15 @@ msgid "Overlays:"
 msgstr ""
 
 #: img_annotation/static/html/author_view.html:27
+msgid "Add Overlay"
+msgstr ""
+
+#: img_annotation/static/html/author_view.html:27
 msgid "Add overlay"
+msgstr ""
+
+#: img_annotation/static/html/author_view.html:28
+msgid "Add Arrow Overlay"
 msgstr ""
 
 #: img_annotation/static/html/author_view.html:28
@@ -138,6 +146,10 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
+#: img_annotation/static/html/img_annotation.html:127
+msgid "Grade for: "
+msgstr ""
+
 #: img_annotation/static/html/img_annotation.html:129
 #: img_annotation/static/html/img_annotation.html:166
 msgid "Score:"
@@ -145,6 +157,10 @@ msgstr ""
 
 #: img_annotation/static/html/img_annotation.html:133
 msgid "General comment:"
+msgstr ""
+
+#: img_annotation/static/html/img_annotation.html:134
+msgid "Insert comment"
 msgstr ""
 
 #: img_annotation/static/html/img_annotation.html:142
@@ -181,6 +197,10 @@ msgstr ""
 
 #: img_annotation/static/html/studio_view.html:17
 msgid "Header"
+msgstr ""
+
+#: img_annotation/static/html/studio_view.html:18
+msgid "Insert component header"
 msgstr ""
 
 #: img_annotation/static/html/studio_view.html:23
