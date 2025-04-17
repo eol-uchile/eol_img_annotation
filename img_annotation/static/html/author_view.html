@@ -19,11 +19,14 @@
             </select>
         </div>
         <label style="cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_label"></label>
-        <div id="test_toolbar">
+        <div id="toolbar-{{ location }}">
+            <div>{{ _("Annotations:") }}</div>
+        </div>
+        <div id="overlay_toolbar">
+            <div>{{ _("Overlays:") }}</div>
             <button id="overlay-draw-button-{{ location }}" class=overlay-button title="Dibuja overlay">{{ _("Add overlay") }}</button>
             <button id="overlay-draw-button-arrow-{{ location }}" class=overlay-button title="Dibuja flecha">{{ _("Add arrow") }}</button>
         </div>
-        <div id="toolbar-{{ location }}"></div>
         <div id="openseadragon-{{ location }}" class='openseadragon'></div>
     {% endif %}
 </div>

@@ -206,7 +206,10 @@ function ImgAnnotationXBlock(runtime, element, settings) {
               toolbar = '#toolbar-'+settings.location;
               Annotorious.Toolbar(anno, $(element).find(toolbar)[0]);
               $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorSquare;
+              $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].title = gettext("Add Annotation");
               $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorPolygon;
+              $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].title = gettext("Add Annotation");
+
               anno.on('createAnnotation', function(annotation) {
                 $(element).find('#img_annotation_wrong_main').hide();
                 $.post(handlerSaveAnnotation, JSON.stringify({'annotation':annotation})).done(function(response) {

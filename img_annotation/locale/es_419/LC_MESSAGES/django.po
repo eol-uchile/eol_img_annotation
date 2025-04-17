@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPEN 0.1.0\n"
 "Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
-"POT-Creation-Date: 2025-04-16 22:15+0000\n"
+"POT-Creation-Date: 2025-04-17 18:44+0000\n"
 "PO-Revision-Date: 2025-04-15 19:21+0000\n"
 "Last-Translator: EOL <eol-ing@uchile.cl>\n"
 "Language: es_419\n"
@@ -70,10 +70,19 @@ msgid "Annotation"
 msgstr "Anotación"
 
 #: img_annotation/static/html/author_view.html:23
+#: img_annotation/static/html/img_annotation.html:76
+msgid "Annotations:"
+msgstr "Anotaciones:"
+
+#: img_annotation/static/html/author_view.html:26
+msgid "Overlays:"
+msgstr "Overlays:"
+
+#: img_annotation/static/html/author_view.html:27
 msgid "Add overlay"
 msgstr "Agrega un overlay"
 
-#: img_annotation/static/html/author_view.html:24
+#: img_annotation/static/html/author_view.html:28
 msgid "Add arrow"
 msgstr "Agrega flecha"
 
@@ -109,10 +118,6 @@ msgstr "Cerrar"
 #: img_annotation/static/html/img_annotation.html:58
 msgid "Show only users without evaluation"
 msgstr "Mostrar solo usuarios sin evaluar"
-
-#: img_annotation/static/html/img_annotation.html:76
-msgid "Annotations:"
-msgstr "Anotaciones:"
 
 #: img_annotation/static/html/img_annotation.html:96
 msgid "My Annotations"

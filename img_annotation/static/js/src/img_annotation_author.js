@@ -90,20 +90,21 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
         var createRectangleButton = document.getElementById("overlay-draw-button-" + settings.location);
         var createArrowButton = document.getElementById("overlay-draw-button-arrow-" + settings.location);
 
-          // Function to toggle pressed state.
+          // Function to toggle pressed state and disable viewer zoom and movement while adding overlays.
           function toggleButtonState(button) {
             // If the button is already pressed, unpress it and enable image movement.
             if (button.classList.contains('pressed')) {
               button.classList.remove('pressed');
-              button.innerHTML = 'inactive';
-              viewer.panHorizontal = true;
-              viewer.panVertical = true;
-              viewer.zoomPerClick = 2;
-              viewer.zoomPerScroll = 1.2;
+              // Adds a small delay to avoid zooming in after adding an arrow.
+              setTimeout(() => {
+                viewer.panHorizontal = true;
+                viewer.panVertical = true;
+                viewer.zoomPerClick = 2;
+                viewer.zoomPerScroll = 1.2;
+              }, 200);
             } else {
               // Otherwise mark it as pressed and disable image movement.
               button.classList.add('pressed');
-              button.innerHTML = 'active';
               viewer.panHorizontal = false;
               viewer.panVertical = false;
               viewer.zoomPerClick = 1;
@@ -115,7 +116,6 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
             // Unpress other button if it's pressed.
             if (createArrowButton.classList.contains('pressed')) {
               createArrowButton.classList.remove('pressed');
-              createArrowButton.innerText = 'inactive';
             }
             toggleButtonState(createRectangleButton);
           });
@@ -124,7 +124,6 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
             // Unpress other button if it's pressed.
             if (createRectangleButton.classList.contains('pressed')) {
               createRectangleButton.classList.remove('pressed');
-              createRectangleButton.innerText = 'inactive';
             }
             toggleButtonState(createArrowButton);
           });
@@ -186,7 +185,6 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
           create_arrow_overlay({'type': 'fixed_size_overlay', 'position_x': arrowPoint.x, 'position_y': arrowPoint.y}, viewer);
           toggleButtonState(createArrowButton);
           arrowPoint = null;
-          event.stopPropagation();
         });
 
         // Handler for drawing rectangle overlays.
@@ -222,11 +220,12 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
         let menu = document.createElement("div");
         menu.id = "overlay-menu-" + settings.location;
         menu.classList.add("overlay-menu");
+        menu.innerHTML = '<h3>' + gettext('Do you want to delete this overlay?') + '</h3>';
         let removeOverlayButton = document.createElement('button');
-        removeOverlayButton.textContent = gettext('Delete overlay');
+        removeOverlayButton.textContent = gettext('Yes');
         removeOverlayButton.classList.add('delete');
         let closeOverlayMenuButton = document.createElement('button');
-        closeOverlayMenuButton.textContent = gettext("Close menu");
+        closeOverlayMenuButton.textContent = gettext("No");
         closeOverlayMenuButton.classList.add('close');
         menu.appendChild(removeOverlayButton);
         menu.appendChild(closeOverlayMenuButton);
@@ -275,7 +274,9 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
           anno.addAnnotation(setAnnotation(annotation.id, annotation.body, annotation.target), true);
         });
         $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorSquare;
+        $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].title = gettext("Add Annotation");
         $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorPolygon;
+        $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].title = gettext("Add Annotation");
     });
 
     function create_arrow_overlay(overlay, viewer){
@@ -332,6 +333,20 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
     function showDeleteMenu(x, y, overlay, id, viewer) {   
       let pixelPoint = viewer.viewport.pixelFromPoint(new OpenSeadragon.Point(Number(x), Number(y)));
       menu = document.getElementById("overlay-menu-" + settings.location);
+
+      let width = parseFloat(getComputedStyle(menu)['width']);
+      let height = parseFloat(getComputedStyle(menu)['height']);
+
+      // Moves the delete menu if its too close to the edge.
+      if (pixelPoint.x + width > viewer.container.clientWidth){
+        pixelPoint.x = pixelPoint.x - width;
+      }
+
+      // Moves the delete menu if its too close to the edge.
+      if (pixelPoint.y + height > viewer.container.clientHeight){
+        pixelPoint.y = pixelPoint.y - height;
+      }
+
       menu.style.left = `${pixelPoint.x}px`;
       menu.style.top = `${pixelPoint.y}px`;
       menu.style.display = "block";
