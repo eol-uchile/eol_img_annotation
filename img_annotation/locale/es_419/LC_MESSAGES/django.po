@@ -44,7 +44,7 @@ msgstr "Edita nuevamente y revisa que todos los campos se han rellenado."
 #: img_annotation/static/html/author_view.html:10
 msgid "You can add annotations here as help annotations for all students to see."
 msgstr ""
-"Puede agregar anotaciones acá como anotaciones de ayuda que podrán ver "
+"Puedes agregar anotaciones acá como anotaciones de ayuda que podrán ver "
 "todos los estudiantes."
 
 #: img_annotation/static/html/author_view.html:13
@@ -59,7 +59,7 @@ msgstr "Anotaciones de ayuda:"
 #: img_annotation/static/html/img_annotation.html:89
 #: img_annotation/static/html/img_annotation.html:98
 msgid "Select an annotation"
-msgstr "Seleccione una anotación"
+msgstr "Selecciona una anotación"
 
 #: img_annotation/static/html/author_view.html:17
 #: img_annotation/static/html/img_annotation.html:71
@@ -100,7 +100,7 @@ msgstr "existen problemas con el link de la imagen"
 
 #: img_annotation/static/html/img_annotation.html:6
 msgid "Contact the course team or help desk."
-msgstr "Contactese con el equipo del curso o mesa de ayuda."
+msgstr "Contáctate con el equipo del curso o mesa de ayuda."
 
 #: img_annotation/static/html/img_annotation.html:10
 msgid "Seeing annotations by:"
@@ -137,7 +137,7 @@ msgstr "Mostrar anotaciones de ayuda"
 
 #: img_annotation/static/html/img_annotation.html:114
 msgid "Graded students information"
-msgstr "Informacion Calificados"
+msgstr "Información de estudiantes calificados"
 
 #: img_annotation/static/html/img_annotation.html:115
 msgid "Graded students:"
@@ -163,7 +163,7 @@ msgstr "Comentario General:"
 
 #: img_annotation/static/html/img_annotation.html:134
 msgid "Insert comment"
-msgstr "Inserte comentario"
+msgstr "Inserte un comentario"
 
 #: img_annotation/static/html/img_annotation.html:142
 msgid "Saving"
@@ -203,7 +203,7 @@ msgstr "Encabezado"
 
 #: img_annotation/static/html/studio_view.html:18
 msgid "Insert component header"
-msgstr "Inserte encabezado del componente"
+msgstr "Inserta el encabezado del componente"
 
 #: img_annotation/static/html/studio_view.html:23
 msgid "Max Score"
