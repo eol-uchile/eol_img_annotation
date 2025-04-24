@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPEN 0.1.0\n"
 "Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
-"POT-Creation-Date: 2025-04-17 20:00+0000\n"
+"POT-Creation-Date: 2025-04-24 14:55+0000\n"
 "PO-Revision-Date: 2025-04-15 19:21+0000\n"
 "Last-Translator: EOL <eol-ing@uchile.cl>\n"
 "Language: es_419\n"
@@ -35,7 +35,7 @@ msgstr "o"
 
 #: img_annotation/static/html/author_view.html:5
 msgid "there are problems with the image link."
-msgstr "existe problemas con el link de la imagen"
+msgstr "existen problemas con el link de la imagen"
 
 #: img_annotation/static/html/author_view.html:6
 msgid "Try again, and check that all fields are filled in."
@@ -59,7 +59,7 @@ msgstr "Anotaciones de ayuda:"
 #: img_annotation/static/html/img_annotation.html:89
 #: img_annotation/static/html/img_annotation.html:98
 msgid "Select an annotation"
-msgstr "Seleccione una Anotación"
+msgstr "Seleccione una anotación"
 
 #: img_annotation/static/html/author_view.html:17
 #: img_annotation/static/html/img_annotation.html:71
@@ -88,7 +88,7 @@ msgstr "Agrega un overlay"
 
 #: img_annotation/static/html/author_view.html:28
 msgid "Add Arrow Overlay"
-msgstr "Agregar Flecha Overlay"
+msgstr "Agregar overlay (flecha)"
 
 #: img_annotation/static/html/author_view.html:28
 msgid "Add arrow"
@@ -96,7 +96,7 @@ msgstr "Agrega flecha"
 
 #: img_annotation/static/html/img_annotation.html:5
 msgid "there are problems with the image link"
-msgstr "existe problemas con el link de la imagen"
+msgstr "existen problemas con el link de la imagen"
 
 #: img_annotation/static/html/img_annotation.html:6
 msgid "Contact the course team or help desk."
