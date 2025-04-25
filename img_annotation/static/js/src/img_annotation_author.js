@@ -156,7 +156,7 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
             }
             else if (o.type == 'fixed_size_overlay') {
               var elt = document.createElement("img");
-              elt.src = "http://upload.wikimedia.org/wikipedia/commons/7/7a/Red_Arrow_Right.svg";
+              elt.src = "/static/images/Red_Arrow_Right.svg";
               elt.width = 20;
               elt.height = 20;
               elt.style.display = "block";  
@@ -286,7 +286,7 @@ function ImgAnnotationAuthorXBlock(runtime, element, settings) {
         }
         else{
           var elt = document.createElement("img");
-          elt.src = "http://upload.wikimedia.org/wikipedia/commons/7/7a/Red_Arrow_Right.svg";
+          elt.src = "/static/images/Red_Arrow_Right.svg";
           elt.width = 20;
           elt.height = 20;
           elt.style.display = "block";  
