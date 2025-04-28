@@ -65,7 +65,7 @@ msgstr "Guardado Correctamente"
 #: img_annotation/static/js/src/img_annotation.js:496
 #: img_annotation/static/js/src/img_annotation.js:501
 msgid "Error - Refresh the page and try again."
-msgstr "Error - Actualice la página e intente nuevamente."
+msgstr "Error - Actualiza la página e intenta nuevamente."
 
 #: img_annotation/static/js/src/img_annotation.js:507
 msgid "Incorrect score, the score must be an integer between 0 and "
