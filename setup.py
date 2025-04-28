@@ -5,7 +5,7 @@ setup(
     version="1.0.0",
     author="Oficina EOL UChile",
     author_email="eol-ing@uchile.cl",
-    description="Xblock with a viewer for high-resolution zoomable images. It lets both students and instructor to add annotations over it.",
+    description="Xblock with a viewer for high-resolution zoomable images. It lets both students and instructors add annotations over it.",
     url="https://eol.uchile.cl",
     packages=find_packages(),
     install_requires=[
