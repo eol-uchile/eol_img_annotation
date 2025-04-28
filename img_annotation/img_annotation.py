@@ -17,7 +17,6 @@ from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
 # Internal project dependencies
-from .models import ImgAnnotationModel, OverlayModel
 
 
 logger = logging.getLogger(__name__)
@@ -126,7 +125,9 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
     def get_annotations(self, student_id, role):
         """
         Return annotations by student_id
-        """        
+        """
+        from .models import ImgAnnotationModel
+        
         annotations = ImgAnnotationModel.objects.filter(
             user__id=student_id,
             course_key=self.course_id,
@@ -146,7 +147,9 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
     def get_annotations_author(self):
         """
         Return annotations by student_id, author view
-        """        
+        """
+        from .models import ImgAnnotationModel
+        
         annotations = ImgAnnotationModel.objects.filter(
             course_key=self.course_id,
             usage_key=self.location,
@@ -165,6 +168,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         Delete overlay by its id.
         """
         try:
+            from .models import OverlayModel
             overlay = OverlayModel.objects.filter(
                 id=overlay_id
             )
@@ -182,6 +186,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         delete annotation by annotation id and student id
         """
         try:
+            from .models import ImgAnnotationModel
             aux = ImgAnnotationModel.objects.filter(
                 annotation_id=annotation_id,
                 user__id=student_id,
@@ -202,6 +207,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         Get or Create overlay model
         """
         # pylint: disable=no-member
+        from .models import OverlayModel
         overlay, created = OverlayModel.objects.get_or_create(
             course_key=self.course_id,
             usage_key=self.location,
@@ -224,6 +230,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         Get or Create img annotation model
         """
         # pylint: disable=no-member
+        from .models import ImgAnnotationModel
         annotation, created = ImgAnnotationModel.objects.get_or_create(
             course_key=self.course_id,
             usage_key=self.location,
@@ -247,6 +254,7 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         Get or Create img annotation model
         """
         # pylint: disable=no-member
+        from .models import ImgAnnotationModel
         annotation = ImgAnnotationModel.objects.get(
             course_key=self.course_id,
             usage_key=self.location,
@@ -342,6 +350,8 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         """
         Return overlays for course_id, block_id
         """
+        from .models import OverlayModel
+
         overlays = OverlayModel.objects.filter(
             course_key=self.course_id,
             usage_key=self.location,
