@@ -135,9 +135,6 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
             data = [{'id': x['annotation_id'], 'body': '', 'target': x['target']} for x in annotations]
         return data
 
-    def max_score(self):
-        return self.puntajemax
-
     def get_annotations_author(self):
         """
         Return annotations by student_id, author view
