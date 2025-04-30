@@ -109,13 +109,6 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         """
         return self.xmodule_runtime.get_user_role() == 'instructor'
 
-    def is_instructor(self):
-        # pylint: disable=no-member
-        """
-        Check if user role is instructor.
-        """
-        return self.xmodule_runtime.get_user_role() == 'instructor'
-
     def show_staff_grading_interface(self):
         """
         Return if current user is staff and not in studio.
