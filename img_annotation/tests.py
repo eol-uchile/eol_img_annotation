@@ -170,6 +170,22 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         response = self.xblock.studio_submit(request)
         data_response = json.loads(response._app_iter[0].decode())
         self.assertEqual(data_response['result'], 'error')
+    
+    def test_edit_block_studio_error_non_puntajemax(self):
+        """
+            Verify submit studio edits when puntajemax doesn't exist
+        """
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.xmodule_runtime.user_is_staff = True
+        data = json.dumps({
+            "display_name": "testname",
+            "header_text": "text test",
+            "image_url": "this is a url"})
+        request.body = data.encode()
+        response = self.xblock.studio_submit(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'error')
 
     def test_author_create_annotation(self):
         """
@@ -366,6 +382,52 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(expected[0]['id'], anno.annotation_id)
         self.assertEqual(expected[0]['target'], anno.target)
         self.assertEqual(expected[0]['body'], [])
+
+    def test_update_annotation_author(self):
+        """
+            Test update annotations when no exists data in post
+        """
+        anno = ImgAnnotationModel.objects.create(
+            annotation_id = "#123-456-789",
+            user = self.staff_user,
+            role = 'staff',
+            body = '[]',
+            course_key = self.course.id,
+            usage_key = self.xblock.location,
+            target = 'test target'
+        )
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        self.xblock.xmodule_runtime.user_is_staff = True
+        data = json.dumps({
+            'annotation': self.annotation})
+        request.body = data.encode()
+        response = self.xblock.updatestudentannotations_author(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'success')
+        expected = self.xblock.get_annotations(self.staff_user.id, 'staff')
+        self.assertEqual(len(expected), 1)
+        self.assertEqual(expected[0]['id'], self.annotation['id'])
+        self.assertEqual(expected[0]['target'], self.annotation['target']['selector']['value'])
+        self.assertEqual(expected[0]['body'], self.annotation['body'])
+
+
+    def test_update_annotation_author_error(self):
+        """
+            Test update annotations when no exists data in post
+        """
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        self.xblock.xmodule_runtime.user_is_staff = True
+        data = json.dumps({'annotation': {}})
+        request.body = data.encode()
+        response = self.xblock.updatestudentannotations_author(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'error')
+        expected = self.xblock.get_annotations(self.staff_user.id, 'staff')
+        self.assertEqual(len(expected), 0)
 
     def test_update_annotation_error(self):
         """
@@ -957,3 +1019,45 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         data_response = json.loads(response._app_iter[0].decode())
         expected = {'result': 'error'}
         self.assertEqual(data_response, expected)
+
+    def test_workbench_scenarios(self):
+        """
+            Checks workbench scenarios title and basic scenario
+        """
+        result_title = 'ImgAnnotationXBlock'
+        basic_scenario = "<img_annotation/>"
+        test_result = self.xblock.workbench_scenarios()
+        self.assertEqual(result_title, test_result[0][0])
+        self.assertIn(basic_scenario, test_result[0][1])
+
+    def test_studio_view_render(self):
+        """
+            Check if xblock studio template loaded correctly
+        """
+        studio_view = self.xblock.studio_view(context=None)
+        studio_view_html = studio_view.content
+        self.assertIn('id="settings-tab"', studio_view_html)
+
+    def test_student_view_render(self):
+        """
+            Check if xblock student template loaded correctly
+        """
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        student_view = self.xblock.student_view()
+        student_view_html = student_view.content
+        self.assertIn('class="img_annotation_block"', student_view_html)
+
+    def test_author_view_render(self):
+        """
+            Check if xblock author template loaded correctly
+        """
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        author_view = self.xblock.author_view()
+        author_view_html = author_view.content
+        self.assertIn('class="img_annotation_block"', author_view_html)
+
+    def test_get_student_item_dict_student_id_is_None(self):
+        self.xblock.xmodule_runtime.anonymous_student_id = '12'
+        self.xblock.id = '1111'
+        result = self.xblock.get_student_item_dict(student_id=None)
+        self.assertEqual('12', result['student_id'])
