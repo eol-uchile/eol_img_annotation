@@ -101,11 +101,46 @@ function ImgAnnotationXBlock(runtime, element, settings) {
               id: osd,
               prefixUrl: settings.osd_resources,
               tileSources: settings.image_data,
-              showNavigator:  true
+              showNavigator:  true,
+              // Initial rotation angle
+              degrees: 0,
+              // Show rotation buttons
+              showRotationControl: true,
+              // Enable touch rotation on tactile devices
+              gestureSettingsTouch: {
+                  pinchRotate: true
+              }
           });
+          
+          viewer.addHandler('open', function() {
+            settings.overlays.forEach(o => {
+              if (o.type == 'highlighted_overlay') {
+              var elt = document.createElement("div");
+              elt.className = 'highlight';
+              viewer.addOverlay({
+                element: elt,
+                location: new OpenSeadragon.Rect(Number(o.position_x), Number(o.position_y), Number(o.width), Number(o.height))
+              });
+              }
+              else if (o.type == 'fixed_size_overlay') {
+                var elt = document.createElement("img");
+                elt.src = "/static/images/Red_Arrow_Right.svg";
+                elt.width = 20;
+                elt.height = 20;
+                elt.style.display = "block";  
+                elt.className = 'right-arrow-overlay';
+                viewer.addOverlay({
+                  element: elt,
+                  location: new OpenSeadragon.Point(Number(o.position_x), Number(o.position_y)),
+                  placement: 'RIGHT',
+                  checkResize: false});
+              };
+            });
+            }); 
+
           anno = OpenSeadragon.Annotorious(viewer, {
             locale: 'auto',
-            gigapixelMode: true,
+            gigapixelMode: false,
             allowEmpty: true,
             formatter: ColorFormatter,
             widgets: [
@@ -130,7 +165,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
               $(element).find('#img_annotation_wrong_main').hide();
               $.post(handlerUpdateAnnotationStaff, JSON.stringify({'annotation':annotation})).done(function(response) {
                 if(response.result != 'success'){
-                  $element.find('#img_annotation_wrong_main')[0].textContent = "Error en editar, actualice la página e intente nuevamente.";
+                  $element.find('#img_annotation_wrong_main')[0].textContent = gettext("Error editing, refresh the page and try again.");
                   $(element).find('#img_annotation_wrong_main').show();
                 }
               });
@@ -171,18 +206,21 @@ function ImgAnnotationXBlock(runtime, element, settings) {
               toolbar = '#toolbar-'+settings.location;
               Annotorious.Toolbar(anno, $(element).find(toolbar)[0]);
               $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorSquare;
+              $(element).find(toolbar).find('.rect').find('.a9s-toolbar-btn-inner')[0].title = gettext("Add Annotation");
               $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].innerHTML = selectorPolygon;
+              $(element).find(toolbar).find('.polygon').find('.a9s-toolbar-btn-inner')[0].title = gettext("Add Annotation");
+
               anno.on('createAnnotation', function(annotation) {
                 $(element).find('#img_annotation_wrong_main').hide();
                 $.post(handlerSaveAnnotation, JSON.stringify({'annotation':annotation})).done(function(response) {
                   if(response.result != 'success'){
-                    $element.find('#img_annotation_wrong_main')[0].textContent = "Error en guardar, actualice la página e intente nuevamente.";
+                    $element.find('#img_annotation_wrong_main')[0].textContent = gettext("Error saving, refresh the page and try again.");
                     $(element).find('#img_annotation_wrong_main').show();
                   }
                   let child = document.createElement("option");
                   child.id = annotation.id.substring(1);
                   child.value = annotation.id;
-                  child.innerText = 'Anotación ' + $(element).find('select[name=annotations_student]')[0].children.length;
+                  child.innerText = gettext('Annotation ') + $(element).find('select[name=annotations_student]')[0].children.length;
                   $(element).find('select[name=annotations_student]')[0].appendChild(child);
                 });
               });
@@ -190,7 +228,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
                 $(element).find('#img_annotation_wrong_main').hide();
                 $.post(handlerRemoveAnnotation, JSON.stringify({'id':annotation.id})).done(function(response) {
                   if(response.result != 'success'){
-                    $element.find('#img_annotation_wrong_main')[0].textContent = "Error en borrar, actualice la página e intente nuevamente.";
+                    $element.find('#img_annotation_wrong_main')[0].textContent = gettext("Error saving, refresh the page and try again.");
                     $(element).find('#img_annotation_wrong_main').show();
                   }
                   var select = $(element).find('select[name=annotations_student]');
@@ -201,7 +239,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
                 $(element).find('#img_annotation_wrong_main').hide();
                 $.post(handlerUpdateAnnotation, JSON.stringify({'annotation':annotation})).done(function(response) {
                   if(response.result != 'success'){
-                    $element.find('#img_annotation_wrong_main')[0].textContent = "Error en editar, actualice la página e intente nuevamente.";
+                    $element.find('#img_annotation_wrong_main')[0].textContent = gettext("Error editing, refresh the page and try again.");
                     $(element).find('#img_annotation_wrong_main').show();
                   }
                 });
@@ -323,7 +361,6 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         select_content.html(html_content);
       }
       function create_select_student(datos, i){
-        //<option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
         var option = '<option id +"';
         var id_anno = datos['id'].substring(1);
         var value = datos['id'];
@@ -388,13 +425,13 @@ function ImgAnnotationXBlock(runtime, element, settings) {
             var modal = '#grade-1-img-annotation-'+ settings.location;
             $(modal).hide();
           }).fail(function() {
-              $element.find('#img_annotation_wrong_label')[0].textContent = "Actualice la página e intente nuevamente.";
+              $element.find('#img_annotation_wrong_label')[0].textContent = gettext("Refresh the page and try again.");
               $(element).find('#img_annotation_wrong_label')[0].style.display = 'block';
               $(this).parent().find("#ui-loading-img-annotation-load-button").hide();
           });
         }
         else{
-            $element.find('#img_annotation_wrong_label')[0].textContent = "Actualice la página e intente nuevamente.";
+            $element.find('#img_annotation_wrong_label')[0].textContent = gettext("Refresh the page and try again.");
             $(element).find('#img_annotation_wrong_label')[0].style.display = 'block';
             $(this).parent().find("#ui-loading-img-annotation-load-button").hide();
         }
@@ -411,12 +448,12 @@ function ImgAnnotationXBlock(runtime, element, settings) {
           //{'result': 'success', 'lista_alumnos': lista_alumnos}
           if (response.result == 'success' ){
               titulo = $(element).find('#img-annotation-body')
-              titulo.html('Puntaje máximo: ' + settings.puntajemax);
+              titulo.html(gettext('Max Score: ') + settings.puntajemax);
               create_modal_content(response.lista_alumnos);
           }
           else {
               titulo = $(element).find('#img-annotation-body');
-              titulo.html('Usuario no tiene permisos para obtener los datos.');
+              titulo.html(gettext('User does not have permissions to access the data.'));
               
           }
           $(element).find('#ui-loading-img-annotation-load').hide();
@@ -425,7 +462,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
           e.currentTarget.disabled = false;
         }).fail(function() {
             titulo = $(element).find('#img-annotation-body')
-            titulo.html('Se ha producido un error en obtener los datos.');
+            titulo.html(gettext('An error has occurred in obtaining the data.'));
             $(element).find('#ui-loading-img-annotation-load').hide();
             forum_modal.style.display = "block";
             window.scroll(0,findPos(document.getElementById(id_modal)) - 450);
@@ -444,7 +481,7 @@ function ImgAnnotationXBlock(runtime, element, settings) {
         if(puntaje != "" && !(puntaje.includes(".")) && parseInt(puntaje, 10) <= parseInt(pmax, 10) && parseInt(puntaje, 10) >= 0){
             $.post(handlerUrlSaveStudentAnswers, JSON.stringify({"student_id": student_id, "puntaje": puntaje, "comentario": comentario})).done(function(response) {
               if (response.result == 'success' ){
-                $element.find('#img_annotation_footer')[0].textContent = 'Guardado Correctamente.';
+                $element.find('#img_annotation_footer')[0].textContent = gettext('Saved Correctly');
                 $(element).find('#img_annotation_footer').show();
                 if(!response.calificado){
                   $element.find("#calificado")[0].textContent = parseInt($element.find("#calificado")[0].textContent) + 1;
@@ -456,18 +493,18 @@ function ImgAnnotationXBlock(runtime, element, settings) {
                 }
               }
               else {
-                $element.find('#img_annotation_wrong_footer')[0].textContent = 'Error - Actualice la página e intente nuevamente.';
+                $element.find('#img_annotation_wrong_footer')[0].textContent = gettext('Error - Refresh the page and try again.');
                 $(element).find('#img_annotation_wrong_footer').show();
               }
               $(element).find('#ui-loading-img-annotation-footer').hide();
             }).fail(function() {
-              $element.find('#img_annotation_wrong_footer')[0].textContent = 'Error - Actualice la página e intente nuevamente.';
+              $element.find('#img_annotation_wrong_footer')[0].textContent = gettext('Error - Refresh the page and try again.');
               $(element).find('#img_annotation_wrong_footer').show();
               $(element).find('#ui-loading-img-annotation-footer').hide();
             });
         }
         else{
-            $element.find('#img_annotation_wrong_footer')[0].textContent = "Puntaje incorrecto, el puntaje debe ser un número entero entre 0 y " + pmax + '.';
+            $element.find('#img_annotation_wrong_footer')[0].textContent = gettext('Incorrect score, the score must be an integer between 0 and ') + pmax + '.';
             $element.find('#img_annotation_footer')[0].textContent = "";
             $(element).find('#img_annotation_footer').hide();
             $(element).find('#img_annotation_wrong_footer').show();
@@ -530,16 +567,17 @@ function ImgAnnotationXBlock(runtime, element, settings) {
             $(element).find('textarea[name=comentario]')[0].value = response.comment;
             $(element).find('#ui-loading-img-annotation-random').hide();
           }).fail(function() {
-              $element.find('#img_annotation_wrong_footer')[0].textContent = "Actualice la página e intente nuevamente.";
+              $element.find('#img_annotation_wrong_footer')[0].textContent = gettext('All students have been evaluated.');
               $(element).find('#img_annotation_wrong_footer').show();
               $(element).find('#ui-loading-img-annotation-random').hide();
           });
         }
         else{
-            $element.find('#img_annotation_footer')[0].textContent = "Todos los estudiantes han sido evaluados.";
+            $element.find('#img_annotation_footer')[0].textContent = gettext('All students have been evaluated.');
             $(element).find('#img_annotation_footer').show();
             $(element).find('#ui-loading-img-annotation-random').hide();
         }
       });
     }
+        
 }
