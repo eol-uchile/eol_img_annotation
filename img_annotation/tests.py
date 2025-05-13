@@ -2,30 +2,27 @@
 Module To Test EolImgAnnotation XBlock
 """
 
-from django.test import TestCase, Client
-from mock import MagicMock, Mock, patch
+# Python Standard Libraries
+import json
+import logging
 from collections import namedtuple
-from django.contrib.auth.models import User
+
+# Installed packages (via pip)
+import xmltodict
 from common.djangoapps.util.testing import UrlResetMixin
-from opaque_keys.edx.locations import Location
-from xmodule.modulestore import ModuleStoreEnum
-from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
-from xmodule.modulestore.tests.factories import CourseFactory, ItemFactory
-from common.djangoapps.student.roles import CourseStaffRole
-from django.test.client import RequestFactory
-from opaque_keys.edx.locations import SlashSeparatedCourseKey
+from mock import Mock, patch
+
+
+# Edx dependencies
 from common.djangoapps.student.tests.factories import UserFactory, CourseEnrollmentFactory
-from lms.djangoapps.courseware.tests.factories import StudentModuleFactory
 from xblock.field_data import DictFieldData
-from opaque_keys.edx.locator import CourseLocator
+from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
+from xmodule.modulestore.tests.factories import CourseFactory
+
+
+# Internal project dependencies
 from .img_annotation import ImgAnnotationXBlock
 from .models import ImgAnnotationModel
-
-import json
-import xmltodict
-import unittest
-import logging
-import mock
 
 log = logging.getLogger(__name__)
 
@@ -106,7 +103,18 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
             "@context": "http://www.w3.org/ns/anno.jsonld",
             "id": "#123-456-789"
         }
-
+        self.rectangle_ovelay = {
+            'type': 'highlighted_overlay',
+            'position_x': 0.3,
+            'position_y': 0.4,
+            'width': 0.1,
+            'height': 0.1
+        }
+        self.arrow_overlay = {
+            'type': 'fixed_size_overlay',
+            'position_x': 0.5,
+            'position_y': 0.6
+        }
         with patch('common.djangoapps.student.models.cc.User.save'):
             # Create the student
             self.student = UserFactory(
@@ -957,3 +965,113 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         data_response = json.loads(response._app_iter[0].decode())
         expected = {'result': 'error'}
         self.assertEqual(data_response, expected)
+
+    def test_author_create_rect_overlay(self):
+        """
+            Test create rectangle overlay in author view
+        """
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        self.xblock.xmodule_runtime.user_is_staff = True
+        data = json.dumps({
+            'overlay': self.rectangle_ovelay})
+        request.body = data.encode()
+        response = self.xblock.save_overlay_xblock(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'success')
+        expected = self.xblock.get_overlays()
+        self.assertEqual(len(expected), 1)
+        self.assertEqual(expected[0]['type'], self.rectangle_ovelay['type'])
+        self.assertEqual(float(expected[0]['position_x']), self.rectangle_ovelay['position_x'])
+        self.assertEqual(float(expected[0]['position_y']), self.rectangle_ovelay['position_y'])
+        self.assertEqual(float(expected[0]['width']), self.rectangle_ovelay['width'])
+        self.assertEqual(float(expected[0]['height']), self.rectangle_ovelay['height'])
+
+    def test_author_create_arrow_overlay(self):
+        """
+            Test create arrow overlay in author view
+        """
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        self.xblock.xmodule_runtime.user_is_staff = True
+        data = json.dumps({
+            'overlay': self.arrow_overlay})
+        request.body = data.encode()
+        response = self.xblock.save_overlay_xblock(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'success')
+        expected = self.xblock.get_overlays()
+        self.assertEqual(len(expected), 1)
+        self.assertEqual(expected[0]['type'], self.arrow_overlay['type'])
+        self.assertEqual(float(expected[0]['position_x']), self.arrow_overlay['position_x'])
+        self.assertEqual(float(expected[0]['position_y']), self.arrow_overlay['position_y'])
+
+    def test_author_create_overlay_error(self):
+        """
+            Test create arrow overlay in author view error 
+        """
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        self.xblock.xmodule_runtime.user_is_staff = True
+        data = json.dumps({
+            'overlay': {
+                'type': 'error_overlay', 
+                "position_x": '1',
+                "position_y": 'y'}})
+        request.body = data.encode()
+        response = self.xblock.save_overlay_xblock(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'error')
+        expected = self.xblock.get_overlays()
+
+    def test_delete_overlays(self):
+        """
+            Test delete overlays
+        """
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        self.xblock.xmodule_runtime.user_is_staff = True
+        data = json.dumps({
+            'overlay': self.arrow_overlay})
+        request.body = data.encode()
+        response = self.xblock.save_overlay_xblock(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'success')
+        expected = self.xblock.get_overlays()
+        delete_request = TestRequest()
+        delete_request.method = 'POST'
+        delete_id = json.dumps({
+            'id': expected[0]['id']})
+        delete_request.body = delete_id.encode()
+        response_delete = self.xblock.delete_overlay_xblock(delete_request)
+        data_response_delete = json.loads(response_delete._app_iter[0].decode())
+        self.assertEqual(data_response_delete['result'], 'success')
+
+    def test_delete_overlays_error(self):
+        """
+            Test delete overlays error
+        """
+        request = TestRequest()
+        request.method = 'POST'
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        self.xblock.xmodule_runtime.user_is_staff = True
+        data = json.dumps({
+            'overlay': self.arrow_overlay})
+        request.body = data.encode()
+        response = self.xblock.save_overlay_xblock(request)
+        data_response = json.loads(response._app_iter[0].decode())
+        self.assertEqual(data_response['result'], 'success')
+        expected = self.xblock.get_overlays()
+        delete_request = TestRequest()
+        delete_request.method = 'POST'
+        delete_id = json.dumps({
+            'id': 501})
+        delete_request.body = delete_id.encode()
+        response_delete = self.xblock.delete_overlay_xblock(delete_request)
+        data_response_delete = json.loads(response_delete._app_iter[0].decode())
+        self.assertEqual(data_response_delete['result'], 'overlay not found')
+        self.assertEqual(data_response_delete['overlay_id'], 501)
