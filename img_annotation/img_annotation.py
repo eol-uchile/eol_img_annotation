@@ -416,9 +416,9 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/img_annotation.css"))
         frag.add_css(self.resource_string("static/css/annotorious.min.css"))
-        frag.add_javascript(self.resource_string("static/img_annotation/openseadragon.5.0.1.min.js"))
-        frag.add_javascript(self.resource_string("static/img_annotation/openseadragon-annotorious.min.js"))
-        frag.add_javascript(self.resource_string("static/img_annotation/annotorious-toolbar.min.js"))
+        frag.add_javascript(self.resource_string("static/js/src/openseadragon.5.0.1.min.js"))
+        frag.add_javascript(self.resource_string("static/js/src/openseadragon-annotorious.min.js"))
+        frag.add_javascript(self.resource_string("static/js/src/annotorious-toolbar.min.js"))
         frag.add_javascript(self.resource_string("static/js/src/img_annotation.js"))
         frag.initialize_js('ImgAnnotationXBlock', json_args=settings)
         return frag
