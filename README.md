@@ -33,7 +33,7 @@ Add the following code here _../themes/your_theme/cms/templates/container.html_
         % endif
     % endfor
     % if have_img_annotation:
-        <script id='openseadragon-scripts' type="text/javascript" src="${static.url('img_annotation/openseadragon.2.4.2.min.js')}"></script>
-        <script type="text/javascript" src="${static.url('img_annotation/openseadragon-annotorious.min.js')}"></script>
-        <script type="text/javascript" src="${static.url('img_annotation/annotorious-toolbar.min.js')}"></script>
+        <script id='openseadragon-scripts' type="text/javascript" src="${static.url('js/src/openseadragon.5.0.1.min.js')}"></script>
+        <script type="text/javascript" src="${static.url('js/src/openseadragon-annotorious.min.js')}"></script>
+        <script type="text/javascript" src="${static.url('js/src/annotorious-toolbar.min.js')}"></script>
     % endif

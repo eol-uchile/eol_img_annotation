@@ -1,31 +1,13 @@
-
-import os
-
-from setuptools import setup
-
-def package_data(pkg, roots):
-    """Generic function to find package_data.
-
-    All of the files under each of the `roots` will be declared as package
-    data for package `pkg`.
-
-    """
-    data = []
-    for root in roots:
-        for dirname, _, files in os.walk(os.path.join(pkg, root)):
-            for fname in files:
-                data.append(os.path.relpath(os.path.join(dirname, fname), pkg))
-
-    return {pkg: data}
+from setuptools import setup, find_packages
 
 setup(
     name="img_annotation",
-    version="0.0.1",
-    author="Luis Santana",
-    author_email="luis.santana@uchile.cl",
-    description=".",
+    version="1.0.0",
+    author="Oficina EOL UChile",
+    author_email="eol-ing@uchile.cl",
+    description="Xblock with a viewer for high-resolution zoomable images. It lets both students and instructors add annotations over it.",
     url="https://eol.uchile.cl",
-    packages=["img_annotation"],
+    packages=find_packages(),
     install_requires=[
         'XBlock',
         'xmltodict'
@@ -44,5 +26,4 @@ setup(
             "img_annotation = img_annotation.apps:ImgAnnotationConfig",
         ],
     },
-    package_data=package_data("img_annotation", ["static", "public"]),
 )

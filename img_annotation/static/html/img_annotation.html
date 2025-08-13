@@ -2,12 +2,12 @@
    <h2>{{xblock.display_name}}</h2>
     {% if xblock.image_url == '' or not have_data %}
         <div class="alert alert-warning" style="line-height: 1;">
-            <p>El componente <strong>no se ha configurado correctamente</strong> o <strong>exite problemas con el link de la imagen</strong>.</p>
-            <p>Contactese con el equipo del curso o mesa de ayuda.</p>
+            <p>{{ _("The component") }} <strong>{{ _("has not been configured correctly") }}</strong> {{ _("or") }} <strong>{{ _("there are problems with the image link") }}</strong>.</p>
+            <p>{{ _("Contact the course team or help desk.") }}</p>
         </div>
     {% else %}
         {% if is_course_staff %}
-            <h3 id='header_username' style="display: none;padding-top: 5px;padding-bottom: 10px;">Viendo anotaciones de: <spin id="student_username_2"></spin></h3>
+            <h3 id='header_username' style="display: none;padding-top: 5px;padding-bottom: 10px;">{{ _("Seeing annotations by:") }} <spin id="student_username_2"></spin></h3>
             <div class="wrapper wrapper-modal-window wrapper-modal-window-move-xblock is-hidden" id="grade-1-img-annotation-{{ location }}" aria-labelledby="modal-window-title" role="dialog">
                 <div class="modal-window-overlay" id="img-annotation-overlay" ></div>
                 <div class="modal-window modal-type-generic" id="grade-1-img-annotation" tabindex="-1" aria-labelledby="modal-window-title">
@@ -23,7 +23,7 @@
                                 <nav class="breadcrumbs" aria-label="Course Outline breadcrumb">
                                     <ol class="bc-container bc-0 last">
                                         <li class="bc-container-content">
-                                            <span id="img-annotation-title" class="parent-displayname">Estudiantes</span>
+                                            <span id="img-annotation-title" class="parent-displayname">{{ _("Students") }}</span>
                                         </li>
                                         <li class="bc-container-content">
                                             <span id="img-annotation-body" class="parent-content"></span>
@@ -36,9 +36,9 @@
                                     <thead>
                                         <tr>
                                             <td hidden>id</td>
-                                            <td class="col-md-6">Estudiante</td>
-                                            <td class="col-md-3">Puntaje</td>
-                                            <td class="col-md-3">Acciones</td>
+                                            <td class="col-md-6">{{ _("Students") }}</td>
+                                            <td class="col-md-3">{{ _("Score") }}</td>
+                                            <td class="col-md-3">{{ _("Actions") }}</td>
                                         </tr>
                                     </thead>
                                     <tbody id="tabla-alumnos">
@@ -50,12 +50,12 @@
                             <label style="cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_label"></label>
                             <div class="row" style="text-align: center;">
                                 <div class="col-md-2">
-                                    <a href="javascript:void(0);" onclick="$('#grade-1-img-annotation-{{ location }}').hide();" class="button  action-cancel">Cerrar</a>
+                                    <a href="javascript:void(0);" onclick="$('#grade-1-img-annotation-{{ location }}').hide();" class="button  action-cancel">{{ _("Close") }}</a>
                                 </div>
                                 <div class="col-md-4"></div>
                                 <div class="col-md-6">
                                     <input type="checkbox" name='checkbox_users' id='checkbox_users-{{ location }}' value="1">
-                                    <label for="checkbox_users-{{ location }}">Mostrar solo usuarios sin evaluar</label>
+                                    <label for="checkbox_users-{{ location }}">{{ _("Show only users without evaluation") }}</label>
                                 </div>
                             </div>
                         </div>
@@ -64,40 +64,40 @@
             </div>
             <p style="text-align: justify;">{{ xblock.header_text }}</p>
             <div class="wrapper-comp-setting" id="annotations_author_class" style="padding-top: 5px;padding-bottom: 5px;">
-                <label class="label setting-label" for="annotations_author-{{ location }}">Anotaciones de Ayuda: </label>
+                <label class="label setting-label" for="annotations_author-{{ location }}">{{ _("Help Annotations:") }} </label>
                 <select id="annotations_author-{{ location }}" name="annotations_author">
-                    <option value="0" selected>Seleccione una Anotación</option>
+                    <option value="0" selected>{{ _("Select an annotation") }}</option>
                     {% for x in list_annotation_staff %}
-                    <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
+                    <option id="{{ x|slice:'1:' }}" value="{{ x }}">{{ _("Annotation") }} {{ forloop.counter }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="wrapper-comp-setting" id="annotations_student_class" style="display: none;padding-top: 5px;padding-bottom: 5px;">
-                <label class="label setting-label" for="annotations_student-{{ location }}">Anotaciones: </label>
+                <label class="label setting-label" for="annotations_student-{{ location }}">{{ _("Annotations:") }} </label>
                 <select id="annotations_student-{{ location }}" name="annotations_student" >
-                    <option value="0" selected>Seleccione una Anotación</option>
+                    <option value="0" selected>{{ _("Select an annotation") }}</option>
                     {% for x in list_annotation_student %}
-                    <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
+                    <option id="{{ x|slice:'1:' }}" value="{{ x }}">{{ _("Annotation") }} {{ forloop.counter }}</option>
                     {% endfor %}
                 </select>
             </div>
         {% else %}
             <p style="text-align: justify;">{{ xblock.header_text }}</p>
             <div class="wrapper-comp-setting" id="annotations_author_class" style="padding-top: 5px;padding-bottom: 5px;">
-                <label class="label setting-label" for="annotations_author-{{ location }}">Anotaciones de Ayuda: </label>
+                <label class="label setting-label" for="annotations_author-{{ location }}">{{ _("Help Annotations:") }} </label>
                 <select id="annotations_author-{{ location }}" name="annotations_author">
-                    <option value="0" selected>Seleccione una Anotación</option>
+                    <option value="0" selected>{{ _("Select an annotation") }}</option>
                     {% for x in list_annotation_staff %}
-                    <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
+                    <option id="{{ x|slice:'1:' }}" value="{{ x }}">{{ _("Annotation") }} {{ forloop.counter }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="wrapper-comp-setting" id="annotations_student_class" style="padding-top: 5px;padding-bottom: 5px;">
-                <label class="label setting-label" for="annotations_student-{{ location }}">Mis Anotaciones: </label>
+                <label class="label setting-label" for="annotations_student-{{ location }}">{{ _("My Annotations") }} </label>
                 <select id="annotations_student-{{ location }}" name="annotations_student" >
-                    <option value="0" selected>Seleccione una Anotación</option>
+                    <option value="0" selected>{{ _("Select an annotation") }}</option>
                     {% for x in list_annotation_student %}
-                    <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
+                    <option id="{{ x|slice:'1:' }}" value="{{ x }}">{{ _("Annotation") }} {{ forloop.counter }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -106,32 +106,32 @@
         <div id="toolbar-{{ location }}" style="display: inline-block;"></div>
         <div class="wrapper-comp-setting" style="float: right;margin-top: 15px;">
             <input type="checkbox" name='checkbox_annotation' id='checkbox_annotation-{{ location }}' value="1" checked>
-            <label for="checkbox_annotation-{{ location }}">Mostrar anotaciones de ayuda</label>
+            <label for="checkbox_annotation-{{ location }}">{{ _("Display help Annotations") }}</label>
         </div>
         <div id="openseadragon-{{ location }}" class='openseadragon' style="display: flex;"></div>
         {% if is_course_staff %}
             <div class="wrap-instructor-info" style="display: block;">
-                <h3>Informacion Calificados</h3>
-                <p style="padding: 10px;text-align: left;">Estudiantes Calificados: <spin id="calificado">{{calificado}}</spin> de {{ total_student }}</p>
+                <h3>{{ _("Graded students information") }}</h3>
+                <p style="padding: 10px;text-align: left;">{{ _("Graded students:") }} <spin id="calificado">{{calificado}}</spin> de {{ total_student }}</p>
             </div>
             <div id="ui-loading-img-annotation-load" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
                 <p>
                 <span class="spin">
                     <span class="icon fa fa-refresh" aria-hidden="true"></span>
                 </span>
-                <span class="copy">Cargando</span>
+                <span class="copy">{{ _("Loading") }}</span>
                 </p>
             </div>
             <div class="wrap-instructor-info" style="display: block;" >
                 <div id="calificacion_student" style="display: none;">
-                    <h3>Calificacion para: <spin id="student_username"></spin></h3>
+                    <h3>{{ _("Grade for: ") }}<spin id="student_username"></spin></h3>
                     <div class="wrapper-comp-setting" style="padding: 10px;">
-                        <label class="label setting-label" for="puntaje-{{ location }}">Puntaje: </label>
+                        <label class="label setting-label" for="puntaje-{{ location }}">{{ _("Score:") }} </label>
                         <input class="input setting-input" name="puntaje" id="puntaje-{{ location }}" value="" type="number" min="0" max="{{ xblock.puntajemax }}"/>
                     </div>
                     <div class="wrapper-comp-setting" style="padding: 10px;">
-                        <label class="label setting-label" for="comentario-{{ location }}">Comentario General: </label>
-                        <textarea class="input setting-input" name="comentario" id="comentario-{{ location }}" type="text" rows="10" cols="70" placeholder='inserte comentario'></textarea>
+                        <label class="label setting-label" for="comentario-{{ location }}">{{ _("General comment:") }} </label>
+                        <textarea class="input setting-input" name="comentario" id="comentario-{{ location }}" type="text" rows="10" cols="70" placeholder={{ _('Insert comment') }}></textarea>
                     </div>
                 </div>
                 <div id="ui-loading-img-annotation-footer" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
@@ -139,7 +139,7 @@
                     <span class="spin">
                         <span class="icon fa fa-refresh" aria-hidden="true"></span>
                     </span>
-                    <span class="copy">Guardando</span>
+                    <span class="copy">{{ _("Saving") }}</span>
                     </p>
                 </div>
                 <div id="ui-loading-img-annotation-random" class="ui-loading is-hidden" style="box-shadow: none;padding: 0;">
@@ -147,7 +147,7 @@
                     <span class="spin">
                         <span class="icon fa fa-refresh" aria-hidden="true"></span>
                     </span>
-                    <span class="copy">Cargando</span>
+                    <span class="copy">{{ _("Loading") }}</span>
                     </p>
                 </div>
                 <input name="img-annotation-save" type="button" style="width: 160px;margin-left: auto;" value="Guardar" aria-controls="">
@@ -157,20 +157,20 @@
             <label style="padding-top: 10px;cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_footer"></label>
             <div aria-hidden="true" class="wrap-instructor-info">
                 <a class="instructor-info-action" name="img-annotation-button" href="#" aria-controls="grade-1-img-annotation-{{ location }}">
-                    Calificar Estudiantes
+                    {{ _("Grade Students") }}
                 </a>
             </div>
         {% else %}
         
         <div class="wrap-instructor-info" style="display: block;">
-            <h3>Calificación</h3>
+            <h3>{{ _("Score:") }}</h3>
             {% if score == '' %}
-                <label style="cursor: default;">No tienes calificaciones</label>
+                <label style="cursor: default;">{{ _("Not graded") }}</label>
             {% else %}
-                <label style="cursor: default;"> Calificado con: {{ score }} de {{ xblock.puntajemax }}</label></br>
+                <label style="cursor: default;"> {{ _("Graded with:") }} {{ score }} {{ _("of")}} {{ xblock.puntajemax }}</label></br>
             {% endif %}
             {% if comentario != '' %}
-                <label style="cursor: default;"> Comentarios: {{ comentario }}</label> 
+                <label style="cursor: default;"> {{ _("Comments:") }} {{ comentario }}</label> 
             {% endif %}
         </div>
         {% endif %}

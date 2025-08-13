@@ -635,3 +635,60 @@
 .img_annotation_block .r6o-lastmodified-at {
   display: none;
 }
+
+.highlight{
+  border: 3px solid red;;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1;  
+}
+
+.highlight:hover{
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.right-arrow-overlay{
+  z-index: 1;      
+}
+
+#overlayElement {
+  background-color: red;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+}
+
+.overlay-menu {
+  position: absolute;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  height: 120px;
+  text-align: center;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.overlay-menu h3 {
+  font-size: 10px;
+  margin-bottom: 18px;
+}
+
+.overlay-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #e9e9ed;
+  border: solid 1px #666;
+  border-radius: 4px;
+}
+
+.overlay-button.pressed {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  background-color: #b5b5bf;
+  transform: scale(0.98);
+  outline: 1px solid #333;
+  border-radius: 4px;
+}

@@ -2,25 +2,31 @@
     <p style="text-align: justify;">{{ xblock.header_text }}</p>
     {% if xblock.image_url == ""  or not have_data %}
         <div class="alert alert-warning">
-            <p>El componente <strong>no se ha configurado correctamente</strong> o <strong>exite problemas con el link de la imagen</strong>.</p>
-            <p>Edita nuevamente, y revisa que todos los campos se han rellenado.</p>
+            <p>{{ _("The component") }} <strong>{{ _("has not been configured correctly") }}</strong> {{_("or")}} <strong>{{ _("there are problems with the image link.") }}</strong></p>
+            <p>{{ _("Try again, and check that all fields are filled in.") }}</p>
         </div>
     {% else %}
         <div class="alert alert-info">
-            <p>Puede agregar anotaciones acá como anotaciones de ayuda que podrán ver todos los estudiantes.</p>
+            <p>{{ _("You can add annotations here as help annotations for all students to see.") }}</p>
         </div>
         <div class="wrapper-comp-setting" style="padding-top: 10px;padding-bottom: 10px;">
-            <label class="label setting-label" for="annotations_xblock-{{ location }}" style="font-size: inherit;">Anotaciones de Ayuda: </label>
+            <label class="label setting-label" for="annotations_xblock-{{ location }}" style="font-size: inherit;">{{ _("Help Annotations:") }} </label>
             <select id="annotations_xblock-{{ location }}" name="annotations_xblock">
-                <option value="0" selected>Seleccione una Anotación</option>
+                <option value="0" selected>{{ _("Select an annotation") }}</option>
                 {% for x in annotation_author %}
-                <option id="{{ x|slice:'1:' }}" value="{{ x }}">Anotación {{ forloop.counter }}</option>
+                <option id="{{ x|slice:'1:' }}" value="{{ x }}">{{ _("Annotation") }} {{ forloop.counter }}</option>
                 {% endfor %}
             </select>
         </div>
         <label style="cursor: default;color: red;display: none; text-align: center;" id="img_annotation_wrong_label"></label>
-        <div id="toolbar-{{ location }}"></div>
+        <div id="toolbar-{{ location }}">
+            <div>{{ _("Annotations:") }}</div>
+        </div>
+        <div id="overlay_toolbar">
+            <div>{{ _("Overlays:") }}</div>
+            <button id="overlay-draw-button-{{ location }}" class=overlay-button title={{ _("Add Overlay") }}>{{ _("Add overlay") }}</button>
+            <button id="overlay-draw-button-arrow-{{ location }}" class=overlay-button title={{ _("Add Arrow Overlay") }}>{{ _("Add arrow") }}</button>
+        </div>
         <div id="openseadragon-{{ location }}" class='openseadragon'></div>
     {% endif %}
-</div>    
-
+</div>
