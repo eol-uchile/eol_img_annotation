@@ -108,13 +108,6 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         """
         return self.xmodule_runtime.get_user_role() == 'instructor'
 
-    def is_instructor(self):
-        # pylint: disable=no-member
-        """
-        Check if user role is instructor.
-        """
-        return self.xmodule_runtime.get_user_role() == 'instructor'
-
     def show_staff_grading_interface(self):
         """
         Return if current user is staff and not in studio.
@@ -140,9 +133,6 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
             logger.error('ImgAnnotation Error decode json body, block_id: {}, student_id: {}, error: {}'.format(self.block_id, student_id, str(e)))
             data = [{'id': x['annotation_id'], 'body': '', 'target': x['target']} for x in annotations]
         return data
-
-    def max_score(self):
-        return self.puntajemax
 
     def get_annotations_author(self):
         """
