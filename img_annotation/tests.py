@@ -5,6 +5,7 @@ Module To Test EolImgAnnotation XBlock
 # Python Standard Libraries
 import json
 import logging
+import requests
 from collections import namedtuple
 
 # Installed packages (via pip)
@@ -570,7 +571,7 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
         """
             Verify context and settings in student_view staff user
         """
-        get.side_effect = [namedtuple("Request", ["status_code", "text"])(200, self.xml_data)]
+        get.side_effect = [namedtuple("Request", ["status_code", "raise_for_status", "text"])(200, Mock(), self.xml_data)]
         expected_context = {
             'list_annotation_student': [],
             'is_course_staff': True,
@@ -586,6 +587,37 @@ class ImgAnnotationXBlockTestCase(UrlResetMixin, ModuleStoreTestCase):
             'list_annotation_staff': [],
             'annotation_staff': [],
             'image_data': self.xml_to_dict(self.xml_data)
+        }
+        self.xblock.image_url = 'https://test.image.cl/image.dzi'
+        self.xblock.xmodule_runtime.user_is_staff = True
+        self.xblock.scope_ids.user_id = self.staff_user.id
+        context, settings = self.xblock.get_context_settings()
+        for key in expected_context:
+            self.assertEqual(expected_context[key], context[key])
+        for key in expected_settings:
+            self.assertEqual(expected_settings[key], settings[key])
+
+    @patch('requests.get')
+    def test_student_view_staff_with_image_url_timeout(self, get):
+        """
+            Verify context and settings in student_view staff user when the image request times out
+        """
+        get.side_effect = [namedtuple("Request", ["status_code", "raise_for_status", "text"])(504, Mock(side_effect=requests.exceptions.Timeout()), '')]
+        expected_context = {
+            'list_annotation_student': [],
+            'is_course_staff': True,
+            'calificado': 0,
+            'total_student': 2,
+            'list_annotation_staff':[],
+            'have_data': False
+        }
+        expected_settings = {
+            'username': self.staff_user.username,
+            'puntajemax' : 1,
+            'is_course_staff': True,
+            'list_annotation_staff': [],
+            'annotation_staff': [],
+            'image_data': {}
         }
         self.xblock.image_url = 'https://test.image.cl/image.dzi'
         self.xblock.xmodule_runtime.user_is_staff = True
