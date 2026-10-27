@@ -1,2 +1,2 @@
 def plugin_settings(settings):
-    pass
+    settings.DZI_SV_CONNECT_TIMEOUT = 30
