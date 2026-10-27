@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="img_annotation",
-    version="1.0.1",
+    version="1.1.0",
     author="Oficina EOL UChile",
     author_email="eol-ing@uchile.cl",
     description="Xblock with a viewer for high-resolution zoomable images. It lets both students and instructors add annotations over it.",

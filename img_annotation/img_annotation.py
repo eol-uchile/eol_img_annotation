@@ -7,6 +7,7 @@ import pkg_resources
 import requests
 import six
 import xmltodict
+from django.conf import settings
 from django.template import Context, Template
 
 # Edx dependencies
@@ -419,25 +420,25 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
         """
         if self.image_url != '':
             try:
-                response = requests.get(self.image_url)
-                if response.status_code == 200:
-                    data = xmltodict.parse(response.text)
-                    dzi_format ={
-                        'Image': {
-                            'xmlns': data['Image']['@xmlns'],
-                            'Url': self.image_url[:-4] + '_files/',
-                            'Format': data['Image']['@Format'], 
-                            'Overlap': data['Image']['@Overlap'], 
-                            'TileSize': data['Image']['@TileSize'],
-                            'Size': {
-                                'Height': data['Image']['Size']['@Height'],
-                                'Width': data['Image']['Size']['@Width']
-                            }
+                response = requests.get(self.image_url, timeout=settings.DZI_SV_CONNECT_TIMEOUT)
+                response.raise_for_status()
+                data = xmltodict.parse(response.text)
+                dzi_format ={
+                    'Image': {
+                        'xmlns': data['Image']['@xmlns'],
+                        'Url': self.image_url[:-4] + '_files/',
+                        'Format': data['Image']['@Format'], 
+                        'Overlap': data['Image']['@Overlap'], 
+                        'TileSize': data['Image']['@TileSize'],
+                        'Size': {
+                            'Height': data['Image']['Size']['@Height'],
+                            'Width': data['Image']['Size']['@Width']
                         }
                     }
-                    return dzi_format
-                else:
-                    logger.error('ImgAnnotation Error - Error to get dzi image, status_code: {}, block_id: {}'.format(response.status_code, str(self.location)))
+                }
+                return dzi_format
+            except requests.exceptions.RequestException as e:
+                logger.error('ImgAnnotation Error - Failed to connect to server, source_url: {}, error: {}'.format(str(self.image_url), repr(e) ))
             except Exception as e:
                 logger.error('ImgAnnotation Error - Invalid Url of dzi image or invalid xml params, block_id: {}, error: {}'.format(str(self.location), str(e)))
         return {}
@@ -824,4 +825,3 @@ class ImgAnnotationXBlock(StudioEditableXBlockMixin, XBlock):
                 </vertical_demo>
              """),
         ]
-
